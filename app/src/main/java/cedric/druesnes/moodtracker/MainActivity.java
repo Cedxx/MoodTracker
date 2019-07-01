@@ -16,34 +16,41 @@ public class MainActivity extends AppCompatActivity {
     public ImageButton mCommentImage;
     public ImageButton mHistoryButton;
     private GestureDetector mDetector;
+    private View.OnTouchListener mListener;
 
+
+    //Images variable that will be display during OnFling Action
+    int[] mImages = {R.drawable.smiley_super_happy,
+            R.drawable.smiley_happy,
+            R.drawable.smiley_normal,
+            R.drawable.smiley_disappointed,
+            R.drawable.smiley_sad};
+    int MIN_DISTANCE = 150;
+    int OFF_PATH = 100;
+    int VELOCITY_THRESHOLD = 75;
+    int mImageIndex = 0;
+    // end of Images variable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Linked the elements in the layout to Java code
-        mMoodImage = findViewById(R.id.moodView);
-        mCommentImage = findViewById(R.id.commentButton);
-        mHistoryButton = findViewById(R.id.historyButton);
-
-        // Image mood variable
-        final int[] moodArray = {R.drawable.smiley_super_happy,
-                R.drawable.smiley_happy,
-                R.drawable.smiley_normal,
-                R.drawable.smiley_disappointed,
-                R.drawable.smiley_sad};
-
         //this is the view we will add the gesture detector to
-        View myView = findViewById(R.id.moodView);
+        mMoodImage = findViewById(R.id.moodView);
+        mMoodImage.setOnTouchListener(mListener);
 
         // get the gesture detector
         mDetector = new GestureDetector(this, new MyGestureListener());
 
         //add a touch listener to the view
         // the touch lister passes all its events on to the gesture detector
-        myView.setOnTouchListener(touchListener);
+        mListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mDetector.onTouchEvent(event);
+            }
+        };
     }
 
     // This touch listener passes everything on to the gesture detector.
@@ -72,6 +79,28 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             Log.d("TAG", "onFling: ");
+
+            if (Math.abs(event1.getY() - event2.getY()) > OFF_PATH)
+                return false;
+
+            if (images.length != 0) {
+                if (event1.getX() - event2.getX() > MIN_DISTANCE && Math.abs(velocityX) > VELOCITY_THRESHOLD) {
+                    // Swipe left
+                    mImageIndex++;
+                    if (mImageIndex == images.length)
+                        mImageIndex = 0;
+                    mMoodImage.setImageResource(mImages[mImageIndex]);
+                } else {
+                    // Swipe right
+                    if (event2.getX() - event1.getX() > MIN_DISTANCE && Math.abs(velocityX) > VELOCITY_THRESHOLD) {
+                        mImageIndex--;
+                        if (mImageIndex < 0) mImageIndex =
+                                images.length - 1;
+                        mMoodImage.setImageResource(mImages[mImageIndex]);
+                    }
+                }
+            }
+
             return true;
         }
     }
