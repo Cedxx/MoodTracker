@@ -77,17 +77,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             Log.d("TAG", "onFling: ");
 
             if (Math.abs(event1.getY() - event2.getY()) > OFF_PATH)
                 return false;
 
-            if (images.length != 0) {
+            if (mImages.length != 0) {
                 if (event1.getX() - event2.getX() > MIN_DISTANCE && Math.abs(velocityX) > VELOCITY_THRESHOLD) {
                     // Swipe left
                     mImageIndex++;
-                    if (mImageIndex == images.length)
+                    if (mImageIndex == mImages.length)
                         mImageIndex = 0;
                     mMoodImage.setImageResource(mImages[mImageIndex]);
                 } else {
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     if (event2.getX() - event1.getX() > MIN_DISTANCE && Math.abs(velocityX) > VELOCITY_THRESHOLD) {
                         mImageIndex--;
                         if (mImageIndex < 0) mImageIndex =
-                                images.length - 1;
+                                mImages.length - 1;
                         mMoodImage.setImageResource(mImages[mImageIndex]);
                     }
                 }
