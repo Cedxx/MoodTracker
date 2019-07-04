@@ -31,8 +31,14 @@ public class MainActivity extends AppCompatActivity {
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
 
+        // Linking the elements in the layout to Java code
+        mMoodImage = findViewById(R.id.moodView);
+        mCommentImage = findViewById(R.id.commentButton);
+        mHistoryButton = findViewById(R.id.historyButton);
+
     }
 
+    // onTouchEven to handle the swipe view
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mDetector.onTouchEvent(event)){
