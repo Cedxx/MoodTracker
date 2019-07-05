@@ -5,16 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Member variable
+
+    // Constants:
     private static final int SWIPE_MIN_DISTANCE = 60;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+    // Member variable
     private GestureDetector mDetector;
     private MyGestureListener mListener;
     public ImageView mMoodImage;
@@ -37,6 +40,22 @@ public class MainActivity extends AppCompatActivity {
         mCommentImage = findViewById(R.id.commentButton);
         mHistoryButton = findViewById(R.id.historyButton);
         mConstraintLayout = findViewById(R.id.contrainLayout);
+
+        //OnClickListener for the comment button and history button
+        mCommentImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        mHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
 
     }
 
@@ -132,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    // TODO: Add onResume() here:
+
+    // TODO: Add onPause() here:
 
 }
 
