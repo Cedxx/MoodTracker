@@ -1,5 +1,6 @@
 package cedric.druesnes.moodtracker;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public ImageButton mCommentImage;
     public ImageButton mHistoryButton;
     private int mCurrentMood = 3;
+    private ConstraintLayout mConstraintLayout;
 
 
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mMoodImage = findViewById(R.id.moodView);
         mCommentImage = findViewById(R.id.commentButton);
         mHistoryButton = findViewById(R.id.historyButton);
+        mConstraintLayout = findViewById(R.id.contrainLayout);
 
     }
 
@@ -47,10 +50,24 @@ public class MainActivity extends AppCompatActivity {
         mCurrentMood = currentMood;
         switch (currentMood) {
             case 0:
-                mMoodImage.setImageResource(R.drawable.smiley_normal);
+                mMoodImage.setImageResource(R.drawable.smiley_sad);
+                mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
             break;
             case 1:
-                mMoodImage.setImageResource(R.drawable.smiley_sad);
+                mMoodImage.setImageResource(R.drawable.smiley_disappointed);
+                mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
+            break;
+            case 2:
+                mMoodImage.setImageResource(R.drawable.smiley_normal);
+                mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
+            break;
+            case 3:
+                mMoodImage.setImageResource(R.drawable.smiley_happy);
+                mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
+            break;
+            case 4:
+                mMoodImage.setImageResource(R.drawable.smiley_super_happy);
+                mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
             break;
         }
         return currentMood;
@@ -81,20 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH || Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
                     return false;
 
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    // right to left swipe
-                    Toast.makeText(getApplicationContext(), "Swipe right to left", Toast.LENGTH_SHORT).show();
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    // left to right swipe
-                    Toast.makeText(getApplicationContext(), "Swipe left to right", Toast.LENGTH_SHORT).show();
-                } else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                     changeMood(--mCurrentMood);
                     // bottom to top
-                    Toast.makeText(getApplicationContext(), "Swipe bottom to top", Toast.LENGTH_SHORT).show();
                 } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                     changeMood(++mCurrentMood);
                     // top to bottom
-                    Toast.makeText(getApplicationContext(), "Swipe top to bottom", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (Exception e) {
