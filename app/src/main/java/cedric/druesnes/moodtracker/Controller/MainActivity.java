@@ -2,6 +2,7 @@ package cedric.druesnes.moodtracker.Controller;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
+    private static final String PREFS = "PREFS";
+    private SharedPreferences mPreferences;
 
 
 
@@ -69,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Check if we already have stored a mood for the day4 each time we launch the App
+    private void retrievePreferences(){
+        mPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        Gson gson = new Gson();
+    }
+
+
 
     //AlertDialog for the comment button
     public void showComment() {
