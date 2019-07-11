@@ -1,11 +1,14 @@
 package cedric.druesnes.moodtracker;
 
+import android.content.DialogInterface;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public ImageButton mHistoryButton;
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
+    private AlertDialog mComment;
 
 
 
@@ -45,19 +49,43 @@ public class MainActivity extends AppCompatActivity {
         mCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showComment();
             }
         });
 
         mHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
-
-
     }
+
+    //AlertDialog for the comment button
+    public void showComment() {
+        final EditText editText = new EditText(this);
+        if (mComment == null) {
+            mComment = new AlertDialog.Builder(this)
+                    .setTitle("Commentaire")
+                    .setView(editText)
+                    .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //your code
+                        }
+                    })
+                    .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+        }
+        mComment.show();
+    }
+
+
 
     //Mood Image variable
     private int changeMood (int currentMood){
