@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import cedric.druesnes.moodtracker.R;
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Check if we already have stored a mood for the day4 each time we launch the App
+    //Check if we already have stored a mood for the day each time we launch the App
     private void retrievePreferences(){
         mPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Generate the current date
     private String todayDate(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.ROOT);
         return dateFormat.format(Calendar.getInstance().getTime());
     }
 
