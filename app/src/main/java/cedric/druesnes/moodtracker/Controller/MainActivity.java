@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //OnClickListener for the comment history button
+        //OnClickListener for the history button that will open a new activity for the history
         mHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
