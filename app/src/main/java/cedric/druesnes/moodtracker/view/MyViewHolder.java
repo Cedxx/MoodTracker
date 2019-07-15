@@ -7,9 +7,9 @@ import butterknife.ButterKnife;
 
 
 
-public class HistoryViewHolder extends RecyclerView.ViewHolder {
+public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    public HistoryViewHolder(View itemView) {
+    public MyViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

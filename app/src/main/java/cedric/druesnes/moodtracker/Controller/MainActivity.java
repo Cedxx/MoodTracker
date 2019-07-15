@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import cedric.druesnes.moodtracker.R;
-import cedric.druesnes.moodtracker.view.HistoryAdapter;
+import cedric.druesnes.moodtracker.view.MyAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_MIN_DISTANCE = 60;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+
     // Member variable
     private GestureDetector mDetector;
     private MyGestureListener mListener;
@@ -42,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
+
     //RecyclerView variable :
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
     //Shared preferences variable :
     private static final String PREFS = "PREFS";
     private SharedPreferences mPreferences;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
+
         //RecyclerView element
         mRecyclerView = findViewById(R.id.activity_history_recycler_view);
 
@@ -66,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //specify an adapter
-        mAdapter = new HistoryAdapter(myDataset);
+        mAdapter = new MyAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
+        //end of RecyclerView
 
 
         // Linking the elements in the layout to Java code
