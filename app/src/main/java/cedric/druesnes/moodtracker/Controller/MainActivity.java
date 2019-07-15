@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +24,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import cedric.druesnes.moodtracker.R;
+import cedric.druesnes.moodtracker.view.HistoryAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
+    //RecyclerView variable :
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    //Shared preferences variable :
     private static final String PREFS = "PREFS";
     private SharedPreferences mPreferences;
 
@@ -50,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
+        //RecyclerView element
+        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
+
+        //use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //specify an adapter
+        mAdapter = new HistoryAdapter(myDataset);
+        mRecyclerView.setAdapter(mAdapter);
+
 
         // Linking the elements in the layout to Java code
         mMoodImage = findViewById(R.id.moodView);
