@@ -29,7 +29,7 @@ import cedric.druesnes.moodtracker.view.MyAdapter;
 public class MainActivity extends AppCompatActivity {
 
 
-    // Constants:
+    // Constants for onFling method:
     private static final int SWIPE_MIN_DISTANCE = 60;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
