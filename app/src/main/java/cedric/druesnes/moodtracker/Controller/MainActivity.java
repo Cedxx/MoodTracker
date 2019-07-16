@@ -3,6 +3,8 @@ package cedric.druesnes.moodtracker.Controller;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
 
+    // Constants for the SoundPool
+    private final int NR_OF_SIMULTANEOUS_SOUNDS = 1;
+    private final float LEFT_VOLUME = 1.0f;
+    private final float RIGHT_VOLUME = 1.0f;
+    private final int NO_LOOP = 0;
+    private final int PRIORITY = 0;
+    private final float NORMAL_PLAY_RATE = 1.0f;
+
     // Member variable
     private GestureDetector mDetector;
     private MyGestureListener mListener;
@@ -43,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
+    private SoundPool mSoundPool;
+    private int mASoundId;
 
     //RecyclerView variable :
     private RecyclerView mRecyclerView;
@@ -62,17 +74,17 @@ public class MainActivity extends AppCompatActivity {
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
 
-        //RecyclerView element
-        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
-
-        //use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        //specify an adapter
-        mAdapter = new MyAdapter(myDataset);
-        mRecyclerView.setAdapter(mAdapter);
-        //end of RecyclerView
+//        //RecyclerView element
+//        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
+//
+//        //use a linear layout manager
+//        mLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//
+//        //specify an adapter
+//        mAdapter = new MyAdapter(myDataset);
+//        mRecyclerView.setAdapter(mAdapter);
+//        //end of RecyclerView
 
 
         // Linking the elements in the layout to Java code
@@ -98,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //create a new SoundPool when we swipe mood
+        mSoundPool = new SoundPool(NR_OF_SIMULTANEOUS_SOUNDS, AudioManager.STREAM_MUSIC, 0);
+
+        //Load and get the IDs to identify the sounds
+        mASoundId = mSoundPool.load(getApplicationContext(),R.raw.note6_a, 1);
+
     }
 
     //Check if we already have stored a mood for the day each time we launch the App
@@ -146,22 +165,27 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 mMoodImage.setImageResource(R.drawable.smiley_sad);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
+                mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
             break;
             case 1:
                 mMoodImage.setImageResource(R.drawable.smiley_disappointed);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
+                mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
             break;
             case 2:
                 mMoodImage.setImageResource(R.drawable.smiley_normal);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
+                mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
             break;
             case 3:
                 mMoodImage.setImageResource(R.drawable.smiley_happy);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
+                mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
             break;
             case 4:
                 mMoodImage.setImageResource(R.drawable.smiley_super_happy);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
+                mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
             break;
         }
         return currentMood;
