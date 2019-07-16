@@ -57,9 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private int mASoundId;
 
     //RecyclerView variable :
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    protected RecyclerView mRecyclerView;
+    protected RecyclerView.Adapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected String[] myDataset;
 
     //Shared preferences variable :
     private static final String PREFS = "PREFS";
@@ -74,17 +75,17 @@ public class MainActivity extends AppCompatActivity {
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
 
-//        //RecyclerView element
-//        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
-//
-//        //use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        //specify an adapter
-//        mAdapter = new MyAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
-//        //end of RecyclerView
+        //RecyclerView element
+        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
+
+        //use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //specify an adapter
+        mAdapter = new MyAdapter(myDataset);
+        mRecyclerView.setAdapter(mAdapter);
+        //end of RecyclerView
 
 
         // Linking the elements in the layout to Java code
