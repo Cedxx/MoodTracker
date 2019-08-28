@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
+    private String mCommentText;
     private SoundPool mSoundPool;
     private int mASoundId;
 
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
+        mCommentText = "";
 
 //        //RecyclerView element
 //        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                historyActivityIntent.putExtra("COMMENT", mCommentText);
                 startActivity(historyActivityIntent);
 
             }
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //your code
+                            mCommentText = editText.getText().toString();
                         }
                     })
                     .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
