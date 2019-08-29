@@ -16,6 +16,10 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         TextView textView = findViewById(R.id.commentMood);
-        textView.setText(getIntent().getStringExtra("COMMENT"));
+        textView.setText(getIntent().getStringExtra("MOOD_COMMENT"));
+
+        TextView moodIndexText = findViewById(R.id.moodIndexText);
+        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 10);
+        moodIndexText.setText(moodIndex.toString());
     }
 }

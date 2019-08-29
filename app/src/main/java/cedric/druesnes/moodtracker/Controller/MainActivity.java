@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 import cedric.druesnes.moodtracker.view.MyAdapter;
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentMood = 3;
     private ConstraintLayout mConstraintLayout;
     private AlertDialog mComment;
-    private String mCommentText;
+    private MoodModel mMood;
     private SoundPool mSoundPool;
     private int mASoundId;
 
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
-        mCommentText = "";
+        mMood = new MoodModel();
+        mMood.setMoodIndex(4);
 
 //        //RecyclerView element
 //        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
@@ -109,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                historyActivityIntent.putExtra("COMMENT", mCommentText);
+                historyActivityIntent.putExtra("MOOD_COMMENT", mMood.getComment());
+                historyActivityIntent.putExtra("MOOD INDEX", mMood.getMoodIndex());
                 startActivity(historyActivityIntent);
 
             }
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //your code
-                            mCommentText = editText.getText().toString();
+                            mMood.setComment(editText.getText().toString());
                         }
                     })
                     .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
@@ -163,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
             currentMood = 4;
         }
         mCurrentMood = currentMood;
+        mMood.setMoodIndex(currentMood);
         switch (currentMood) {
             case 0:
                 mMoodImage.setImageResource(R.drawable.smiley_sad);
