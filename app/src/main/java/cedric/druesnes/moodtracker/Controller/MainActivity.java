@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mListener = new MyGestureListener();
         mDetector = new GestureDetector(getApplicationContext(), mListener);
         mMood = new MoodModel();
-        mMood.setMoodIndex(4);
+        mMood.setMoodIndex(mCurrentMood);
 
 //        //RecyclerView element
 //        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
                 historyActivityIntent.putExtra("MOOD_COMMENT", mMood.getComment());
-                historyActivityIntent.putExtra("MOOD INDEX", mMood.getMoodIndex());
+                historyActivityIntent.putExtra("MOOD_INDEX", mMood.getMoodIndex());
                 startActivity(historyActivityIntent);
 
             }
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //your code
+                            //send the comment to the historyActivity
                             mMood.setComment(editText.getText().toString());
                         }
                     })
