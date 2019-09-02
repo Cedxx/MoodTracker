@@ -1,5 +1,6 @@
 package cedric.druesnes.moodtracker.Controller;
 
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import cedric.druesnes.moodtracker.R;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    private int mColor = 3;
+    private int mColor;
     private ImageButton mImageColor;
 
 
@@ -29,23 +30,23 @@ public class HistoryActivity extends AppCompatActivity {
 //        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
 //        moodIndexText.setText(moodIndex.toString());
 
-        View moodIndexColor = findViewById(R.id.imageButton);
+        View moodColor = findViewById(R.id.historyConstrainLayout);
         Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
-        moodIndexColor.setBackgroundColor(moodIndex);
+        moodColor.setBackgroundColor(moodBackground(moodIndex));
 
 
 
     }
 
     //Mood background color
-    private int moodBackground (int color){
-        if (color < 0){
-            color = 0;
-        } else if (color > 4){
-            color = 4;
+    private int moodBackground (int moodIndex){
+        if (moodIndex < 0){
+            moodIndex = 0;
+        } else if (moodIndex > 4){
+            moodIndex = 4;
         }
-        mColor = color;
-        switch (color){
+        mColor = moodIndex;
+        switch (moodIndex){
             case 0:
                 mImageColor.setBackgroundColor(getResources().getColor(R.color.faded_red));
                 break;
@@ -62,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity {
                 mImageColor.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
                 break;
         }
-        return color;
+        return moodIndex;
 
     }
 }
