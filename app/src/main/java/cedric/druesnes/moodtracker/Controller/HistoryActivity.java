@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -12,8 +13,9 @@ import cedric.druesnes.moodtracker.R;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    private int mColor;
-    private ImageButton mImageColor;
+//    private int mColor;
+//    private Layout mImageColor;
+    private ConstraintLayout mHistoryLayout;
 
 
     @Override
@@ -21,7 +23,8 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_history);
-        mImageColor = findViewById(R.id.imageButton);
+        //mImageColor = findViewById(R.id.imageButton);
+         mHistoryLayout = findViewById(R.id.historyConstrainLayout);
 
         TextView textView = findViewById(R.id.commentMood);
         textView.setText(getIntent().getStringExtra("MOOD_COMMENT"));
@@ -40,27 +43,27 @@ public class HistoryActivity extends AppCompatActivity {
 
     //Mood background color
     private int moodBackground (int moodIndex){
-        if (moodIndex < 0){
-            moodIndex = 0;
-        } else if (moodIndex > 4){
-            moodIndex = 4;
-        }
-        mColor = moodIndex;
+//        if (moodIndex < 0){
+//            moodIndex = 0;
+//        } else if (moodIndex > 4){
+//            moodIndex = 4;
+//        }
+//        mColor = moodIndex;
         switch (moodIndex){
             case 0:
-                mImageColor.setBackgroundColor(getResources().getColor(R.color.faded_red));
+                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
                 break;
             case 1:
-                mImageColor.setBackgroundColor(getResources().getColor(R.color.warm_grey));
+                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
                 break;
             case 2:
-                mImageColor.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
+                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
                 break;
             case 3:
-                mImageColor.setBackgroundColor(getResources().getColor(R.color.light_sage));
+                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
                 break;
             case 4:
-                mImageColor.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
+                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
                 break;
         }
         return moodIndex;
