@@ -13,8 +13,7 @@ import cedric.druesnes.moodtracker.R;
 
 public class HistoryActivity extends AppCompatActivity {
 
-//    private int mColor;
-//    private Layout mImageColor;
+
     private ConstraintLayout mHistoryLayout;
 
 
@@ -22,18 +21,16 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Linking the elements in the layout to Java code
         setContentView(R.layout.activity_history);
-        //mImageColor = findViewById(R.id.imageButton);
          mHistoryLayout = findViewById(R.id.historyConstrainLayout);
 
+        //getting the Intent from the MainActivity for the comment button and display the comment
         TextView textView = findViewById(R.id.commentMood);
         textView.setText(getIntent().getStringExtra("MOOD_COMMENT"));
 
-//        TextView moodIndexText = findViewById(R.id.moodIndexText);
-//        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
-//        moodIndexText.setText(moodIndex.toString());
-
-        View moodColor = findViewById(R.id.historyConstrainLayout);
+        //get the Mood color to display the current Mood when History Button is press
+        View moodColor = findViewById(R.id.commentMood);
         Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
         moodColor.setBackgroundColor(moodBackground(moodIndex));
 
@@ -41,14 +38,8 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    //Mood background color
+    //Mood background color switch
     private int moodBackground (int moodIndex){
-//        if (moodIndex < 0){
-//            moodIndex = 0;
-//        } else if (moodIndex > 4){
-//            moodIndex = 4;
-//        }
-//        mColor = moodIndex;
         switch (moodIndex){
             case 0:
                 mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
