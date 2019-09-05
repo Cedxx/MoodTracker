@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Shared preferences variable :
     private static final String PREFS = "MyPrefsFile";
+    public static final String PREF_KEY_COMMENT = "PREF_KEY_COMMENT";
     private SharedPreferences mPreferences;
+    private SharedPreferences mRetrievePreferences;
 
 
     @Override
@@ -124,9 +127,27 @@ public class MainActivity extends AppCompatActivity {
         //Load and get the IDs to identify the sounds
         mASoundId = mSoundPool.load(getApplicationContext(),R.raw.note6_a, 1);
 
+        //Saving the user information with SharedPreferences
+        mPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPreferences.edit();
+        AlertDialog myComment = mComment;
+        editor.putString(PREF_KEY_COMMENT, String.valueOf(myComment));
+        editor.apply();
+        retrievePreferences();
+
+
     }
 
-    //Check if we already have stored a mood for the day each time we launch the App
+    private void retrievePreferences(){
+        // Calling the shared preference
+        mRetrievePreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+        String userInput = mRetrievePreferences.getString("PREF_KEY_COMMENT", "");
+        Log.i("CheckMyStringIsOK", userInput); //Le the string to be sure we get the correct value
+
+
+
+    }
+
 
 
 
