@@ -1,6 +1,5 @@
 package cedric.druesnes.moodtracker.Controller;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,16 +19,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
-import cedric.druesnes.moodtracker.view.MyAdapter;
+import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private SoundPool mSoundPool;
     private int mASoundId;
 
-    //RecyclerView variable :
-    protected RecyclerView mRecyclerView;
-    protected RecyclerView.Adapter mAdapter;
-    protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] myDataset;
-
     //Shared preferences variable :
     private static final String PREFS = "MyPrefsFile";
     public static final String PREF_KEY_COMMENT = "PREF_KEY_COMMENT";
@@ -81,18 +73,6 @@ public class MainActivity extends AppCompatActivity {
         mDetector = new GestureDetector(getApplicationContext(), mListener);
         mMood = new MoodModel();
         mMood.setMoodIndex(mCurrentMood);
-
-//        //RecyclerView element
-//        mRecyclerView = findViewById(R.id.activity_history_recycler_view);
-//
-//        //use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        //specify an adapter
-//        mAdapter = new MyAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
-//        //end of RecyclerView
 
 
         // Linking the elements in the layout to Java code
@@ -125,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         mSoundPool = new SoundPool(NR_OF_SIMULTANEOUS_SOUNDS, AudioManager.STREAM_MUSIC, 0);
 
         //Load and get the IDs to identify the sounds
-        mASoundId = mSoundPool.load(getApplicationContext(),R.raw.note6_a, 1);
+        mASoundId = mSoundPool.load(getApplicationContext(), R.raw.note6_a, 1);
 
         //Saving the user information with SharedPreferences
         mPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
@@ -138,18 +118,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void retrievePreferences(){
+
+    private void retrievePreferences() {
         // Calling the shared preference
         mRetrievePreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
         String userInput = mRetrievePreferences.getString("PREF_KEY_COMMENT", "");
         Log.i("CheckMyStringIsOK", userInput); //Le the string to be sure we get the correct value
 
 
-
     }
-
-
-
 
 
     //AlertDialog for the comment button
@@ -178,12 +155,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     //Mood Image variable
-    private int changeMood (int currentMood){
-        if (currentMood < 0){
+    private int changeMood(int currentMood) {
+        if (currentMood < 0) {
             currentMood = 0;
-        }else if (currentMood > 4){
+        } else if (currentMood > 4) {
             currentMood = 4;
         }
         mCurrentMood = currentMood;
@@ -193,34 +169,34 @@ public class MainActivity extends AppCompatActivity {
                 mMoodImage.setImageResource(R.drawable.smiley_sad);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
                 mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
-            break;
+                break;
             case 1:
                 mMoodImage.setImageResource(R.drawable.smiley_disappointed);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
                 mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
-            break;
+                break;
             case 2:
                 mMoodImage.setImageResource(R.drawable.smiley_normal);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
                 mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
-            break;
+                break;
             case 3:
                 mMoodImage.setImageResource(R.drawable.smiley_happy);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
                 mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
-            break;
+                break;
             case 4:
                 mMoodImage.setImageResource(R.drawable.smiley_super_happy);
                 mConstraintLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
                 mSoundPool.play(mASoundId, LEFT_VOLUME, RIGHT_VOLUME, PRIORITY, NO_LOOP, NORMAL_PLAY_RATE);
-            break;
+                break;
         }
         return currentMood;
 
     }
 
     //Generate the current date
-    private String todayDate(){
+    private String todayDate() {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.ROOT);
         return dateFormat.format(Calendar.getInstance().getTime());
     }
@@ -230,13 +206,12 @@ public class MainActivity extends AppCompatActivity {
     // TODO: Add onPause() here:
 
 
-
     // onTouchEven to handle the swipe view
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mDetector.onTouchEvent(event)){
+        if (mDetector.onTouchEvent(event)) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
