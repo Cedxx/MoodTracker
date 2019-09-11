@@ -38,14 +38,14 @@ public class HistoryActivity extends AppCompatActivity {
         //Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
         //moodBackground(moodIndex);
 
-
         // data to populate the RecyclerView with
+        String myComment = getIntent().getStringExtra("MOOD_COMMENT");
         ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
+        animalNames.add(myComment);
+        animalNames.add(myComment);
+        animalNames.add(myComment);
+        animalNames.add(myComment);
+        animalNames.add(myComment);
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
