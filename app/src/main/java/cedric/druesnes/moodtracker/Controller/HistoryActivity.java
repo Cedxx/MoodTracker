@@ -1,17 +1,14 @@
 package cedric.druesnes.moodtracker.Controller;
 
-import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cedric.druesnes.moodtracker.R;
 import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
@@ -19,7 +16,8 @@ import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 public class HistoryActivity extends AppCompatActivity {
 
 
-    private ConstraintLayout mHistoryLayout;
+    private LinearLayout mRowLayout;
+    String[] myComment;
     //RecyclerView variable :
     MyRecylerViewAdapter mAdapter;
 
@@ -29,7 +27,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Linking the elements in the layout to Java code
         setContentView(R.layout.activity_history);
-        //mHistoryLayout = findViewById(R.id.historyConstrainLayout);
+        mRowLayout = findViewById(R.id.row_layout);
 
         //getting the Intent from the MainActivity for the comment button and display the comment
         //TextView textView = findViewById(R.id.recyclerComment);
@@ -38,19 +36,24 @@ public class HistoryActivity extends AppCompatActivity {
         //Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
         //moodBackground(moodIndex);
 
+//        Intent intent = getIntent();
+//        String[] stringArray = getIntent().getStringArrayExtra("string");
+
         // data to populate the RecyclerView with
-        String myComment = getIntent().getStringExtra("MOOD_COMMENT");
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add(myComment);
-        animalNames.add(myComment);
-        animalNames.add(myComment);
-        animalNames.add(myComment);
-        animalNames.add(myComment);
+        myComment = getIntent().getStringArrayExtra("MOOD_COMMENT");
+//        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
+//        moodBackground(moodIndex);
+//        List<String[]> commentHistory = new ArrayList<>();
+//        commentHistory.add(myComment);
+//        commentHistory.add(myComment);
+//        commentHistory.add(myComment);
+//        commentHistory.add(myComment);
+//        commentHistory.add(myComment);
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MyRecylerViewAdapter(this, animalNames);
+        mAdapter = new MyRecylerViewAdapter(this, myComment);
         recyclerView.setAdapter(mAdapter);
 
     }
@@ -59,19 +62,19 @@ public class HistoryActivity extends AppCompatActivity {
     private void moodBackground(int moodIndex) {
         switch (moodIndex) {
             case 0:
-                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
+                mRowLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
                 break;
             case 1:
-                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
+                mRowLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
                 break;
             case 2:
-                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
+                mRowLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
                 break;
             case 3:
-                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
+                mRowLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
                 break;
             case 4:
-                mHistoryLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
+                mRowLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
                 break;
         }
 

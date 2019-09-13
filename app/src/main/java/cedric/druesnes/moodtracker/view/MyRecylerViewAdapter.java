@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import cedric.druesnes.moodtracker.R;
@@ -18,9 +19,9 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public MyRecylerViewAdapter(Context context, List<String> data) {
+    public MyRecylerViewAdapter(Context context, String[] data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = Arrays.asList(data);
     }
 
     // inflates the row layout from xml when needed
@@ -33,8 +34,8 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        String comment = this.getItem(position);
+        holder.myTextView.setText(comment);
     }
 
     // total number of rows
