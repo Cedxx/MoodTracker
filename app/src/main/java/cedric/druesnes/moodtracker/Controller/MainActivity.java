@@ -90,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //OnClickListener for the history button that will open a new activity for the history
+        //Create a new Intent to send the comment and the background color from the user to the History Activity
         mHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                String[] stringArray = new String[]{mMood.getComment()};
-                historyActivityIntent.putExtra("MOOD_COMMENT", stringArray);
-                //historyActivityIntent.putExtra("MOOD_COMMENT", mMood.getComment());
-                //historyActivityIntent.putExtra("MOOD_INDEX", mMood.getMoodIndex());
+                String[] commentArray = new String[]{mMood.getComment()};
+                historyActivityIntent.putExtra("MOOD_COMMENT", commentArray);
+//                historyActivityIntent.putExtra("MOOD_COMMENT", mMood.getComment());
+//                historyActivityIntent.putExtra("MOOD_INDEX", mMood.getMoodIndex());
                 startActivity(historyActivityIntent);
 
             }
@@ -110,25 +111,25 @@ public class MainActivity extends AppCompatActivity {
         mASoundId = mSoundPool.load(getApplicationContext(), R.raw.note6_a, 1);
 
         //Saving the user information with SharedPreferences
-        mPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPreferences.edit();
-        AlertDialog myComment = mComment;
-        editor.putString(PREF_KEY_COMMENT, String.valueOf(myComment));
-        editor.apply();
-        retrievePreferences();
+//        mPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        AlertDialog myComment = mComment;
+//        editor.putString(PREF_KEY_COMMENT, String.valueOf(myComment));
+//        editor.apply();
+//        retrievePreferences();
 
 
     }
 
 
-    private void retrievePreferences() {
-        // Calling the shared preference
-        mRetrievePreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
-        String userInput = mRetrievePreferences.getString("PREF_KEY_COMMENT", "");
-        Log.i("CheckMyStringIsOK", userInput); //Le the string to be sure we get the correct value
-
-
-    }
+//    private void retrievePreferences() {
+//        // Calling the shared preference
+//        mRetrievePreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+//        String userInput = mRetrievePreferences.getString("PREF_KEY_COMMENT", "");
+//        Log.i("CheckMyStringIsOK", userInput); //Le the string to be sure we get the correct value
+//
+//
+//    }
 
 
     //AlertDialog for the comment button

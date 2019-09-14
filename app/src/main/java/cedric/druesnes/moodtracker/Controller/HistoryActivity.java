@@ -1,6 +1,5 @@
 package cedric.druesnes.moodtracker.Controller;
 
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 
@@ -20,6 +19,7 @@ public class HistoryActivity extends AppCompatActivity {
     String[] myComment;
     //RecyclerView variable :
     MyRecylerViewAdapter mAdapter;
+    ArrayList<MoodModel> mComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +41,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         // data to populate the RecyclerView with
         myComment = getIntent().getStringArrayExtra("MOOD_COMMENT");
+        mComment = new ArrayList<>();
+        mComment.add(new MoodModel());
+        mComment.add(new MoodModel());
+        mComment.add(new MoodModel());
+
 //        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
 //        moodBackground(moodIndex);
 //        List<String[]> commentHistory = new ArrayList<>();
-//        commentHistory.add(myComment);
-//        commentHistory.add(myComment);
-//        commentHistory.add(myComment);
-//        commentHistory.add(myComment);
-//        commentHistory.add(myComment);
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
