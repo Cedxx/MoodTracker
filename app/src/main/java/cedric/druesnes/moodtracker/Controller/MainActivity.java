@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private MoodModel mMood;
     private SoundPool mSoundPool;
     private int mASoundId;
+    private ArrayList<String> mCommentArray;
 
     //Shared preferences variable :
     private static final String PREFS = "MyPrefsFile";
@@ -89,14 +91,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Create an empty ArrayList for the CommentButton
+        mCommentArray = new ArrayList<>();
+
         //OnClickListener for the history button that will open a new activity for the history
         //Create a new Intent to send the comment and the background color from the user to the History Activity
         mHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                String[] commentArray = new String[]{mMood.getComment()};
-                historyActivityIntent.putExtra("MOOD_COMMENT", commentArray);
+                historyActivityIntent.putStringArrayListExtra("MOOD_COMMENT", mCommentArray);
 //                historyActivityIntent.putExtra("MOOD_COMMENT", mMood.getComment());
 //                historyActivityIntent.putExtra("MOOD_INDEX", mMood.getMoodIndex());
                 startActivity(historyActivityIntent);
@@ -143,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //send the comment to the historyActivity
-                            mMood.setComment(editText.getText().toString());
+                            mCommentArray.add(editText.getText().toString());
+                            editText.setText("", TextView.BufferType.EDITABLE);
+                            dialog.dismiss();
                         }
                     })
                     .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
