@@ -43,8 +43,6 @@ public class HistoryActivity extends AppCompatActivity {
         myComment = getIntent().getStringArrayListExtra("MOOD_COMMENT").toArray(new String[0]);
         mComment = new ArrayList<>();
         mComment.add(new MoodModel());
-        mComment.add(new MoodModel());
-        mComment.add(new MoodModel());
 
 //        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
 //        moodBackground(moodIndex);
