@@ -40,7 +40,7 @@ public class HistoryActivity extends AppCompatActivity {
 //        String[] stringArray = getIntent().getStringArrayExtra("string");
 
         // data to populate the RecyclerView with
-        myComment = getIntent().getStringArrayExtra("MOOD_COMMENT");
+        myComment = getIntent().getStringArrayListExtra("MOOD_COMMENT").toArray(new String[0]);
         mComment = new ArrayList<>();
         mComment.add(new MoodModel());
         mComment.add(new MoodModel());
