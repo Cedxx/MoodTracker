@@ -2,6 +2,7 @@ package cedric.druesnes.moodtracker.Controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
@@ -29,30 +30,23 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         mRowLayout = findViewById(R.id.row_layout);
 
+//        //getting the Intent from the MainActivity for the background color of the current mood
+//        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
+//        moodBackground(moodIndex);
+
         //getting the Intent from the MainActivity for the comment button and display the comment
-        //TextView textView = findViewById(R.id.recyclerComment);
-        //textView.setText(getIntent().getStringExtra("MOOD_COMMENT"));
-
-        //Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
-        //moodBackground(moodIndex);
-
-//        Intent intent = getIntent();
-//        String[] stringArray = getIntent().getStringArrayExtra("string");
-
-        // data to populate the RecyclerView with
         myComment = getIntent().getStringArrayListExtra("MOOD_COMMENT").toArray(new String[0]);
         mComment = new ArrayList<>();
         mComment.add(new MoodModel());
-
-//        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
-//        moodBackground(moodIndex);
-//        List<String[]> commentHistory = new ArrayList<>();
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MyRecylerViewAdapter(this, myComment);
         recyclerView.setAdapter(mAdapter);
+
+        //Vertical divider for the RecyclerView when displaying history of the mood
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
 
     }
 
