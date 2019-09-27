@@ -16,7 +16,7 @@ public final class Mood {
     }
 
     //Create the DATABASE
-    private static final String SQL_CREATE_ENTRIES =
+    public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE" + MoodEntry.TABLE_NAME + " (" +
             MoodEntry._ID + " INTEGER PRIMARY KEY," +
             MoodEntry.COLUMN_COMMENT + " TEXT," +
@@ -24,6 +24,6 @@ public final class Mood {
             MoodEntry.COLUMN_DATE + "TEXT)";
 
     //Drop the table is it already exists
-    private static final String SQL_DELETE_ENTRIES =
+    public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + MoodEntry.TABLE_NAME;
 }
