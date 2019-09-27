@@ -1,8 +1,10 @@
 package cedric.druesnes.moodtracker.Controller;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -20,12 +22,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Comment;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import cedric.druesnes.moodtracker.Model.Mood;
+import cedric.druesnes.moodtracker.Model.MoodDbHelper;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
@@ -145,6 +151,19 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //Instantiate the database
+                            MoodDbHelper dbHelper = new MoodDbHelper(getApplicationContext());
+                            // Get the database repository in write mode
+                            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                            //Create a new map of values, where column names are the keys
+                            ContentValues values = new ContentValues();
+                            values.put(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
+                            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
+
+                            //Insert the new row, returning the primary key value of the new row
+                            long newRowId = db.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());
                             editText.setText("", TextView.BufferType.EDITABLE);

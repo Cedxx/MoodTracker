@@ -31,5 +31,5 @@ public class MoodDbHelper extends SQLiteOpenHelper {
     public void onDownGrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
-        
+
 }
