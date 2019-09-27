@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
-                            values.put(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
+                            values.put(Mood.MoodEntry.COLUMN_COMMENT, String.valueOf(editText));
                             values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
 
                             //Insert the new row, returning the primary key value of the new row
