@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private SoundPool mSoundPool;
     private int mASoundId;
     private ArrayList<String> mCommentArray;
+    private MoodDbHelper mDbHelper;
+    private SQLiteDatabase mDatabase;
 
     //Shared preferences variable :
     private static final String PREFS = "MyPrefsFile";
@@ -81,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         mDetector = new GestureDetector(getApplicationContext(), mListener);
         mMood = new MoodModel();
         mMood.setMoodIndex(mCurrentMood);
+
+        //Instantiate the database
+        mDbHelper = new MoodDbHelper(getApplicationContext());
+
+        // Get the database repository in write mode
+        mDatabase = mDbHelper.getWritableDatabase();
 
 
         // Linking the elements in the layout to Java code
@@ -119,26 +127,8 @@ public class MainActivity extends AppCompatActivity {
         //Load and get the IDs to identify the sounds
         mASoundId = mSoundPool.load(getApplicationContext(), R.raw.note6_a, 1);
 
-        //Saving the user information with SharedPreferences
-//        mPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        AlertDialog myComment = mComment;
-//        editor.putString(PREF_KEY_COMMENT, String.valueOf(myComment));
-//        editor.apply();
-//        retrievePreferences();
-
-
     }
 
-
-//    private void retrievePreferences() {
-//        // Calling the shared preference
-//        mRetrievePreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
-//        String userInput = mRetrievePreferences.getString("PREF_KEY_COMMENT", "");
-//        Log.i("CheckMyStringIsOK", userInput); //Le the string to be sure we get the correct value
-//
-//
-//    }
 
 
     //AlertDialog for the comment button
@@ -151,18 +141,14 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //Instantiate the database
-                            MoodDbHelper dbHelper = new MoodDbHelper(getApplicationContext());
-                            // Get the database repository in write mode
-                            SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
-                            values.put(Mood.MoodEntry.COLUMN_COMMENT, String.valueOf(editText));
+                            values.put(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
                             values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
 
                             //Insert the new row, returning the primary key value of the new row
-                            long newRowId = db.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+                            long newRowId = mDatabase.insert(Mood.MoodEntry.TABLE_NAME, null, values);
 
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());

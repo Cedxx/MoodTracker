@@ -5,8 +5,7 @@ import android.provider.BaseColumns;
 public final class Mood {
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
-    private Mood() {
-    }
+    private Mood() {}
 
     //create the database entries for each field that we want to save
     public static class MoodEntry implements BaseColumns {
