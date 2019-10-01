@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static cedric.druesnes.moodtracker.Model.Mood.SQL_CREATE_ENTRIES;
-import static cedric.druesnes.moodtracker.Model.Mood.SQL_DELETE_ENTRIES;
 
 public class MoodDbHelper extends SQLiteOpenHelper {
     //If you change the database schema, you must increment the database version.

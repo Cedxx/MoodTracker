@@ -3,7 +3,6 @@ package cedric.druesnes.moodtracker.Controller;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -11,9 +10,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,19 +18,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Comment;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.Date;
+import java.util.TimeZone;
 
 import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodDbHelper;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
-import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,12 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> mCommentArray;
     private MoodDbHelper mDbHelper;
     private SQLiteDatabase mDatabase;
-
-    //Shared preferences variable :
-    private static final String PREFS = "MyPrefsFile";
-    public static final String PREF_KEY_COMMENT = "PREF_KEY_COMMENT";
-    private SharedPreferences mPreferences;
-    private SharedPreferences mRetrievePreferences;
 
 
     @Override
@@ -142,10 +129,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            //Create a new map of values, where column names are the keys
+                           //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
                             values.put(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
                             values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
+                            values.put(Mood.MoodEntry.COLUMN_DATE, getCurrentDate());
 
                             //Insert the new row, returning the primary key value of the new row
                             long newRowId = mDatabase.insert(Mood.MoodEntry.TABLE_NAME, null, values);
@@ -209,9 +197,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Generate the current date
-    private String todayDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.ROOT);
-        return dateFormat.format(Calendar.getInstance().getTime());
+    public static final String DATE_FORMAT = "dd-MMM-yyyy";
+
+    public static String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date today = Calendar.getInstance().getTime();
+        return dateFormat.format(today);
     }
 
     // TODO: Add onResume() here:

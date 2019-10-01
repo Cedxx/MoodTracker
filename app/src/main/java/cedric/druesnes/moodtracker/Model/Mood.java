@@ -20,9 +20,9 @@ public final class Mood {
             MoodEntry._ID + " INTEGER PRIMARY KEY," +
             MoodEntry.COLUMN_COMMENT + " TEXT," +
             MoodEntry.COLUMN_MOOD_INDEX + " INT," +
-            MoodEntry.COLUMN_DATE + "TEXT)";
+            MoodEntry.COLUMN_DATE + " TEXT)";
 
-    //Drop the table is it already exists
+    //Drop the table if it already exists
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + MoodEntry.TABLE_NAME;
 }
