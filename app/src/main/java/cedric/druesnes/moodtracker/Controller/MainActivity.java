@@ -210,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: Add onPause() here:
 
+    //Close the database with the onDestroy method
+    @Override
+    protected void onDestroy() {
+        mDbHelper.close();
+        super.onDestroy();
+    }
+
 
     // onTouchEven to handle the swipe view
     @Override
