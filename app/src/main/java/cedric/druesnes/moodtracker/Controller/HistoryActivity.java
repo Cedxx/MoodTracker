@@ -50,22 +50,15 @@ public class HistoryActivity extends AppCompatActivity {
                 Mood.MoodEntry.COLUMN_DATE
         };
 
-        // Filter results WHERE "title" = 'My Title'
-        String selection = Mood.MoodEntry.COLUMN_COMMENT + " = ?";
-        String[] selectionArgs = {"My Comment"};
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                Mood.MoodEntry.COLUMN_DATE + " DESC";
 
         Cursor cursor = db.query(
                 Mood.MoodEntry.TABLE_NAME,   //The table to query
                 projection,                  // The array of columns to return (pass null to get all)
-                selection,                   // The columns for the WHERE clause
-                selectionArgs,               //The values for the WHERE clause
+                null,                   // The columns for the WHERE clause
+                null,               //The values for the WHERE clause
                 null,                //Don't group the rows
                 null,                 //Don't filter by row groups
-                sortOrder                   //The sort order
+                null                   //The sort order
         );
 
         List itemids = new ArrayList<>();
