@@ -1,13 +1,13 @@
 package cedric.druesnes.moodtracker.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,14 +16,14 @@ import cedric.druesnes.moodtracker.R;
 
 public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private ArrayList<MoodModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public MyRecylerViewAdapter(Context context, String[] data) {
+    public MyRecylerViewAdapter(Context context, ArrayList<MoodModel> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = Arrays.asList(data);
+        this.mData = data;
     }
 
     // inflates the row layout from xml when needed
@@ -65,7 +65,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     // convenience method for getting data at click position
     public String getItem(int id) {
-        return mData.get(id);
+        return mData.get(id).getComment();
     }
 
     // allows clicks events to be caught

@@ -51,6 +51,10 @@ public class HistoryActivity extends AppCompatActivity {
         };
 
 
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                Mood.MoodEntry.COLUMN_DATE + " DESC";
+
         Cursor cursor = db.query(
                 Mood.MoodEntry.TABLE_NAME,   //The table to query
                 projection,                  // The array of columns to return (pass null to get all)
@@ -58,14 +62,15 @@ public class HistoryActivity extends AppCompatActivity {
                 null,               //The values for the WHERE clause
                 null,                //Don't group the rows
                 null,                 //Don't filter by row groups
-                null                   //The sort order
+                sortOrder                   //The sort order
         );
 
-        List itemids = new ArrayList<>();
+        ArrayList<MoodModel> moods = new ArrayList<MoodModel>();
         while (cursor.moveToNext()) {
-            long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(Mood.MoodEntry._ID));
-            itemids.add(itemId);
+            MoodModel mood = new MoodModel();
+            mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
+            mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
+            moods.add(mood);
         }
         cursor.close();
 
@@ -74,19 +79,11 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         mRowLayout = findViewById(R.id.row_layout);
 
-//        //getting the Intent from the MainActivity for the background color of the current mood
-//        Integer moodIndex = getIntent().getIntExtra("MOOD_INDEX", 3);
-//        moodBackground(moodIndex);
-
-        //getting the Intent from the MainActivity for the comment button and display the comment
-        myComment = getIntent().getStringArrayListExtra("MOOD_COMMENT").toArray(new String[0]);
-        mComment = new ArrayList<>();
-        mComment.add(new MoodModel());
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MyRecylerViewAdapter(this, myComment);
+        mAdapter = new MyRecylerViewAdapter(this, moods);
         recyclerView.setAdapter(mAdapter);
 
         //Vertical divider for the RecyclerView when displaying history of the mood
