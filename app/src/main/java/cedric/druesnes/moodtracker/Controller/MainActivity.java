@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                historyActivityIntent.putStringArrayListExtra("MOOD_COMMENT", mCommentArray);
-                historyActivityIntent.putExtra("MOOD_INDEX", mMood.getMoodIndex());
                 startActivity(historyActivityIntent);
 
             }
