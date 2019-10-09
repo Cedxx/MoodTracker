@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
@@ -38,6 +36,24 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         String comment = this.getItem(position);
         holder.myTextView.setText(comment);
+        switch (getMoodIndex(position)){
+            case 0:
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.faded_red));
+                break;
+            case 1:
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.warm_grey));
+                break;
+            case 2:
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cornflower_blue_65));
+                break;
+            case 3:
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.light_sage));
+                break;
+            case 4:
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.banana_yellow));
+                break;
+        }
+
     }
 
     // total number of rows
@@ -61,6 +77,10 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+
+    public int getMoodIndex(int position){
+        return mData.get(position).getMoodIndex();
     }
 
     // convenience method for getting data at click position

@@ -1,11 +1,9 @@
 package cedric.druesnes.moodtracker.Controller;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodDbHelper;
@@ -24,12 +21,11 @@ import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 public class HistoryActivity extends AppCompatActivity {
 
 
-    private LinearLayout mRowLayout;
     String[] myComment;
     //RecyclerView variable :
     MyRecylerViewAdapter mAdapter;
     ArrayList<MoodModel> mComment;
-
+    private LinearLayout mRowLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,25 +87,4 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    //Mood background color switch
-    private void moodBackground(int moodIndex) {
-        switch (moodIndex) {
-            case 0:
-                mRowLayout.setBackgroundColor(getResources().getColor(R.color.faded_red));
-                break;
-            case 1:
-                mRowLayout.setBackgroundColor(getResources().getColor(R.color.warm_grey));
-                break;
-            case 2:
-                mRowLayout.setBackgroundColor(getResources().getColor(R.color.cornflower_blue_65));
-                break;
-            case 3:
-                mRowLayout.setBackgroundColor(getResources().getColor(R.color.light_sage));
-                break;
-            case 4:
-                mRowLayout.setBackgroundColor(getResources().getColor(R.color.banana_yellow));
-                break;
-        }
-
-    }
 }
