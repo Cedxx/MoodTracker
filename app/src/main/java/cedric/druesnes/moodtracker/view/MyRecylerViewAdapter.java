@@ -1,11 +1,15 @@
 package cedric.druesnes.moodtracker.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,6 +21,15 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     private ArrayList<MoodModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private ImageButton mImageButtonRow;
+
+
+    //Set the height and width of the row
+    int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+
 
     // data is passed into the constructor
     public MyRecylerViewAdapter(Context context, ArrayList<MoodModel> data) {
@@ -34,32 +47,69 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String comment = this.getItem(position);
-        holder.myTextView.setText(comment);
+        //String comment = this.getItem(position);
+        //holder.myTextView.setText(comment);
+        // set width of RecyclerView and the color of mood for each row
+        holder.itemView.setLayoutParams(params);
         switch (getMoodIndex(position)){
             case 0:
+                params.width = width * 20 / 100;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.faded_red));
                 break;
             case 1:
+                params.width = width * 40 / 100;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.warm_grey));
                 break;
             case 2:
+                params.width = width * 60 / 100;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cornflower_blue_65));
                 break;
             case 3:
+                params.width = width * 80 / 100;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.light_sage));
                 break;
             case 4:
+                params.width = width;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.banana_yellow));
+                break;
+        }
+
+        switch (position){
+            case 0:
+                holder.myTextView.setText("il y a une semaine");
+                break;
+            case 1:
+                holder.myTextView.setText("il y a six jours");
+                break;
+            case 2:
+                holder.myTextView.setText("il y a cinq jours");
+                break;
+            case 3:
+                holder.myTextView.setText("il y a quatre jours");
+                break;
+            case 4:
+                holder.myTextView.setText("il y a trois jours");
+                break;
+            case 5:
+                holder.myTextView.setText("Avant-hier");
+                break;
+            case 6:
+                holder.myTextView.setText("Hier");
                 break;
         }
 
     }
 
     // total number of rows
+    private final int limit = 7;
     @Override
     public int getItemCount() {
-        return mData.size();
+        if(mData.size() > limit){
+            return limit;
+        }
+        else {
+            return mData.size();
+        }
     }
 
 
@@ -76,6 +126,8 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            mImageButtonRow = itemView.findViewById(R.id.imageButtonRow);
+
         }
     }
 
