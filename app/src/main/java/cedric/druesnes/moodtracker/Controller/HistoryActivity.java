@@ -21,11 +21,8 @@ import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 public class HistoryActivity extends AppCompatActivity {
 
 
-    String[] myComment;
     //RecyclerView variable :
     MyRecylerViewAdapter mAdapter;
-    ArrayList<MoodModel> mComment;
-    private LinearLayout mRowLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
                 sortOrder                   //The sort order
         );
 
-        ArrayList<MoodModel> moods = new ArrayList<MoodModel>();
+        ArrayList<MoodModel> moods = new ArrayList<>();
         while (cursor.moveToNext()) {
             MoodModel mood = new MoodModel();
             mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
@@ -73,7 +70,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Linking the elements in the layout to Java code
         setContentView(R.layout.activity_history);
-        mRowLayout = findViewById(R.id.row_layout);
 
 
         // set up the RecyclerView
@@ -82,8 +78,8 @@ public class HistoryActivity extends AppCompatActivity {
         mAdapter = new MyRecylerViewAdapter(this, moods);
         recyclerView.setAdapter(mAdapter);
 
-        //Vertical divider for the RecyclerView when displaying history of the mood
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+//        //Vertical divider for the RecyclerView when displaying history of the mood
+//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
     }
 
