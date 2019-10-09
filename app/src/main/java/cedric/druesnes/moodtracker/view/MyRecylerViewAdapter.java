@@ -28,9 +28,6 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     int width = Resources.getSystem().getDisplayMetrics().widthPixels;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-
-
-
     // data is passed into the constructor
     public MyRecylerViewAdapter(Context context, ArrayList<MoodModel> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -50,6 +47,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         //String comment = this.getItem(position);
         //holder.myTextView.setText(comment);
         // set width of RecyclerView and the color of mood for each row
+
         holder.itemView.setLayoutParams(params);
         switch (getMoodIndex(position)){
             case 0:
@@ -101,9 +99,9 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     }
 
     // total number of rows
-    private final int limit = 7;
     @Override
     public int getItemCount() {
+        int limit = 7;
         if(mData.size() > limit){
             return limit;
         }
@@ -149,4 +147,5 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 }
