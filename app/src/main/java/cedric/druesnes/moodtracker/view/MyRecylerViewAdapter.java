@@ -46,8 +46,8 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         //String comment = this.getItem(position);
         //holder.myTextView.setText(comment);
-        // set width of RecyclerView and the color of mood for each row
 
+        // set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
         switch (getMoodIndex(position)){
             case 0:
@@ -72,27 +72,28 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
                 break;
         }
 
+        //Switch to display the proper date schema for the week
         switch (position){
             case 0:
-                holder.myTextView.setText("il y a une semaine");
+                holder.myTextView.setText(R.string.one_week);
                 break;
             case 1:
-                holder.myTextView.setText("il y a six jours");
+                holder.myTextView.setText(R.string.six_day);
                 break;
             case 2:
-                holder.myTextView.setText("il y a cinq jours");
+                holder.myTextView.setText(R.string.five_day);
                 break;
             case 3:
-                holder.myTextView.setText("il y a quatre jours");
+                holder.myTextView.setText(R.string.four_day);
                 break;
             case 4:
-                holder.myTextView.setText("il y a trois jours");
+                holder.myTextView.setText(R.string.three_day);
                 break;
             case 5:
-                holder.myTextView.setText("Avant-hier");
+                holder.myTextView.setText(R.string.last_day);
                 break;
             case 6:
-                holder.myTextView.setText("Hier");
+                holder.myTextView.setText(R.string.yesterday);
                 break;
         }
 

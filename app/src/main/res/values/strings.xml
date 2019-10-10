@@ -3,4 +3,11 @@
     <string name="historyButton">History</string>
     <string name="commentButton">Comment</string>
     <string name="moodView">Display current mood</string>
+    <string name="one_week">il y a une semaine</string>
+    <string name="six_day">il y a six jours</string>
+    <string name="five_day">il y a cinq jours</string>
+    <string name="four_day">il y a quatre jours</string>
+    <string name="three_day">il y a trois jours</string>
+    <string name="last_day">Avant-hier</string>
+    <string name="yesterday">Hier</string>
 </resources>
