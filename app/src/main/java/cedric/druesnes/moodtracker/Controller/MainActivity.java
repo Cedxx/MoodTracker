@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -151,6 +152,29 @@ public class MainActivity extends AppCompatActivity {
                     .create();
         }
         mComment.show();
+    }
+
+    private boolean isNotOlderThanAWeek(String currentDate, String LastDateInDatabase){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            Date todayDate = dateFormat.parse(currentDate);
+            Date dateInDatabase = dateFormat.parse(LastDateInDatabase);
+            if(todayDate.getDay() - dateInDatabase.getDay() > 7) {
+                //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
+                String selection = Mood.MoodEntry.COLUMN_MOOD_INDEX;
+                int deletedRows = mDatabase.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
+
+                return false;
+            }else {
+                // AJOUTER A LA BASE DE DONNEE
+
+                return true;
+            }
+        }catch (Exception exception){
+            System.out.println((exception.getLocalizedMessage()));
+        }
+        return true;
     }
 
 

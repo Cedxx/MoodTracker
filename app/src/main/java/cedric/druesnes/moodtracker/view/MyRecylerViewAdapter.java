@@ -25,7 +25,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
 
     //Set the height and width of the row
-    int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private int width = Resources.getSystem().getDisplayMetrics().widthPixels;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     // data is passed into the constructor
