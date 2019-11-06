@@ -3,11 +3,12 @@ package cedric.druesnes.moodtracker.Controller;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.renderscript.Sampler;
+import android.provider.BaseColumns;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the database repository in write mode
         mDatabase = mDbHelper.getWritableDatabase();
+        // Get the database repository in read mode
+        mDatabase = mDbHelper.getReadableDatabase();
 
 
         // Linking the elements in the layout to Java code
@@ -157,12 +160,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean isNotOlderThanAWeek(String currentDate, String LastDateInDatabase){
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateInDatabase = cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE));
         try {
             Date todayDate = dateFormat.parse(currentDate);
             Date dateInDatabase = dateFormat.parse(LastDateInDatabase);
             if(todayDate.getDay() - dateInDatabase.getDay() > 7) {
                 //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
-                String selection = Mood.MoodEntry.COLUMN_MOOD_INDEX;
+                String selection = Mood.MoodEntry._ID;
                 int deletedRows = mDatabase.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
 
                 return false;
@@ -176,6 +180,39 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    // Define a projection that specifies which columns from the database
+    // you will actually use after this query.
+    String[] projection = {
+            BaseColumns._ID,
+            Mood.MoodEntry.COLUMN_COMMENT,
+            Mood.MoodEntry.COLUMN_MOOD_INDEX,
+            Mood.MoodEntry.COLUMN_DATE
+    };
+
+
+    // How you want the results sorted in the resulting Cursor
+    String sortOrder =
+            Mood.MoodEntry.COLUMN_DATE + " DESC";
+
+    Cursor cursor = mDatabase.query(
+            Mood.MoodEntry.TABLE_NAME,   //The table to query
+            projection,                  // The array of columns to return (pass null to get all)
+            null,                   // The columns for the WHERE clause
+            null,               //The values for the WHERE clause
+            null,                //Don't group the rows
+            null,                 //Don't filter by row groups
+            sortOrder                   //The sort order
+    );
+
+    ArrayList<MoodModel> moods = new ArrayList<>();
+        while (cursor.moveToNext()) {
+        MoodModel mood = new MoodModel();
+        mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
+        mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
+        moods.add(mood);
+    }
+        cursor.close();
 
 
     //Mood Image variable
