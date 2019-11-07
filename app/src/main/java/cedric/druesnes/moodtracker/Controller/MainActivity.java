@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
+        Date today = new Date();
         return dateFormat.format(today);
     }
 
