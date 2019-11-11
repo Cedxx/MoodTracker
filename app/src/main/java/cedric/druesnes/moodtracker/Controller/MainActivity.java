@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isNotOlderThanAWeek(String currentDate, String LastDateInDatabase){
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date dateInDatabase = cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE));
+        Date dateInDatabase = getDatabaseInfo(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
         try {
             Date todayDate = dateFormat.parse(currentDate);
             dateInDatabase = dateFormat.parse(String.valueOf(dateInDatabase));
