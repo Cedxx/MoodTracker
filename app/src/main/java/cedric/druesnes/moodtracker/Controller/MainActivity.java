@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isNotOlderThanAWeek(String currentDate, String DateInDatabase) {
         if (getMoodIdInDatabase(currentDate) == 8) {
+            String selection = Mood.MoodEntry._ID;
+            int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
             return false;
         } else {
 
