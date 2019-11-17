@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -61,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private int mASoundId;
     private ArrayList<String> mCommentArray;
     private MoodDbHelper mDbHelper;
-    private SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDatabaseWrite;
+    private SQLiteDatabase mDatabaseRead;
 
 
     @Override
@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper = new MoodDbHelper(getApplicationContext());
 
         // Get the database repository in write mode
-        mDatabase = mDbHelper.getWritableDatabase();
+        mDatabaseWrite = mDbHelper.getWritableDatabase();
         // Get the database repository in read mode
-        mDatabase = mDbHelper.getReadableDatabase();
+        mDatabaseRead = mDbHelper.getReadableDatabase();
 
 
         // Linking the elements in the layout to Java code
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                             values.put(Mood.MoodEntry.COLUMN_DATE, getCurrentDate());
 
                             //Insert the new row, returning the primary key value of the new row
-                            long newRowId = mDatabase.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+                            long newRowId = mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
 
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());
@@ -157,28 +157,78 @@ public class MainActivity extends AppCompatActivity {
         mComment.show();
     }
 
-    private boolean isNotOlderThanAWeek(String currentDate, String LastDateInDatabase){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date dateInDatabase = getDatabaseInfo(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
-        try {
-            Date todayDate = dateFormat.parse(currentDate);
-            dateInDatabase = dateFormat.parse(String.valueOf(dateInDatabase));
-            if(todayDate.getDay() - dateInDatabase.getDay() > 7) {
-                //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
-                String selection = Mood.MoodEntry._ID;
-                int deletedRows = mDatabase.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
+    private boolean isNotOlderThanAWeek(String currentDate, String DateInDatabase) {
+        if (getMoodIdInDatabase(currentDate) == 8) {
+            return false;
+        } else {
 
-                return false;
-            }else {
-                // AJOUTER A LA BASE DE DONNEE
-
-                return true;
-            }
-        }catch (Exception exception){
-            System.out.println((exception.getLocalizedMessage()));
         }
-        return true;
+        return false;
+    }
+//        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+//        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        Date dateInDatabase = getDatabaseInfo(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
+//        try {
+//            Date todayDate = dateFormat.parse(currentDate);
+//            dateInDatabase = dateFormat.parse(String.valueOf(dateInDatabase));
+//            if(todayDate.getDay() - dateInDatabase.getDay() > 7) {
+//                //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
+//                String selection = Mood.MoodEntry._ID;
+//                int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
+//
+//                return false;
+//            }else {
+//                // AJOUTER A LA BASE DE DONNEE
+//
+//                return true;
+//            }
+//        }catch (Exception exception){
+//            System.out.println((exception.getLocalizedMessage()));
+//        }
+//        return true;
+//    }
+
+    //Retrieve the ID of the current date from the database if it's present else return 0.
+    private int getMoodIdInDatabase(String date){
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + date + "'";
+        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+        while (cursor.moveToNext()){
+            return cursor.getInt(cursor.getColumnIndex("_ID"));
+        }
+        return 0;
+    }
+
+    //Remove the whole entry base on is ID if it's older then 7 days
+    private ArrayList<Integer> getMoodOlderInDatabase(Date todayDate){
+        ArrayList<Integer> moodIds = new ArrayList<Integer>();
+        String sqlString = "SELECT * from moodDB";
+        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        while (cursor.moveToNext()){
+            try{
+                Date dateInDatabase = sdf.parse(cursor.getString(cursor.getColumnIndex("Date")));
+                if(dateInDatabase.getDay() < todayDate.getDay() - 7){
+                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+                    String deleteSql = "DELETE FROM moodDB WHERE _ID = " + moodID + "";
+                    mDatabaseWrite.execSQL(deleteSql);
+                }
+
+            }catch (Exception e){
+                System.out.println(e.getLocalizedMessage());
+            }
+
+        }
+        return moodIds;
+    }
+
+    //Check is their is a current date in the database
+    private Boolean isToday(){
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
+        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+        while (cursor.moveToNext()){
+            return true;
+        }
+        return false;
     }
 
     //Retrieve the database information
@@ -198,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         String sortOrder =
                 Mood.MoodEntry.COLUMN_DATE + " DESC";
 
-        Cursor cursor = mDatabase.query(
+        Cursor cursor = mDatabaseRead.query(
                 Mood.MoodEntry.TABLE_NAME,   //The table to query
                 projection,                  // The array of columns to return (pass null to get all)
                 null,                   // The columns for the WHERE clause
