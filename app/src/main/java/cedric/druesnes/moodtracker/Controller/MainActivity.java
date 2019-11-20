@@ -168,11 +168,12 @@ public class MainActivity extends AppCompatActivity {
         //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        if (cursor == null || cursor.getColumnCount() == 0)
+        //if (cursor == null || cursor.getColumnCount() == 0)
+        while (cursor.moveToNext()) {
             try {
                 Date DateInDatabase = dateFormat.parse(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
                 Date todayDate = new Date();
-                if (todayDate.getDay() - DateInDatabase.getDay() == 0) {
+                if (todayDate.getDay() - DateInDatabase.getDay() > 7) {
                     //delete the line in the database corresponding to the ID
                     int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
                     // Define 'where' part of query.
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
+        }
         return 0;
     }
 
