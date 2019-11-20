@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //Insert the new row, returning the primary key value of the new row
                             long newRowId = mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+                            isNotOlderThanAWeek();
 
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());
@@ -157,81 +159,80 @@ public class MainActivity extends AppCompatActivity {
         mComment.show();
     }
 
-    private boolean isNotOlderThanAWeek(String currentDate, String DateInDatabase) {
-        if (getMoodIdInDatabase(currentDate) == 8) {
-            String selection = Mood.MoodEntry._ID;
-            int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
-            return false;
-        } else {
-
-        }
-        return false;
-    }
-//        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-//        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        Date dateInDatabase = getDatabaseInfo(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
-//        try {
-//            Date todayDate = dateFormat.parse(currentDate);
-//            dateInDatabase = dateFormat.parse(String.valueOf(dateInDatabase));
-//            if(todayDate.getDay() - dateInDatabase.getDay() > 7) {
-//                //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
-//                String selection = Mood.MoodEntry._ID;
-//                int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, null);
-//
-//                return false;
-//            }else {
-//                // AJOUTER A LA BASE DE DONNEE
-//
-//                return true;
-//            }
-//        }catch (Exception exception){
-//            System.out.println((exception.getLocalizedMessage()));
-//        }
-//        return true;
-//    }
-
-    //Retrieve the ID of the current date from the database if it's present else return 0.
-    private int getMoodIdInDatabase(String date){
-        String sqlString = "SELECT * from moodDB WHERE Date = '" + date + "'";
+    private int isNotOlderThanAWeek() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        while (cursor.moveToNext()){
-            return cursor.getInt(cursor.getColumnIndex("_ID"));
+            if (cursor == null || cursor.getColumnCount() == 0)
+        try {
+            Date DateInDatabase = dateFormat.parse(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
+            Date todayDate = new Date();
+            if(todayDate.getDay() - DateInDatabase.getDay() == 0) {
+                //SUPPRIMER LA LIGNE DANS LA BASE DE DONNEE CORRESPONDANT A DATEINDATABASE
+                int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+                // Define 'where' part of query.
+                String selection = Mood.MoodEntry._ID + " = ? ";
+                // Specify arguments in placeholder order.
+                String[] selectionArgs = new String[]{Integer.toString(moodID)};
+                // Issue SQL statement.
+                int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
+
+                return cursor.getInt(deletedRows);
+            }else {
+                // AJOUTER A LA BASE DE DONNEE
+
+                return 0;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
         return 0;
     }
 
-    //Remove the whole entry base on is ID if it's older then 7 days
-    private ArrayList<Integer> getMoodOlderInDatabase(Date todayDate){
-        ArrayList<Integer> moodIds = new ArrayList<Integer>();
-        String sqlString = "SELECT * from moodDB";
-        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        while (cursor.moveToNext()){
-            try{
-                Date dateInDatabase = sdf.parse(cursor.getString(cursor.getColumnIndex("Date")));
-                if(dateInDatabase.getDay() < todayDate.getDay() - 7){
-                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
-                    String deleteSql = "DELETE FROM moodDB WHERE _ID = " + moodID + "";
-                    mDatabaseWrite.execSQL(deleteSql);
-                }
-
-            }catch (Exception e){
-                System.out.println(e.getLocalizedMessage());
-            }
-
-        }
-        return moodIds;
-    }
-
-    //Check is their is a current date in the database
-    private Boolean isToday(){
-        String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
-        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        while (cursor.moveToNext()){
-            return true;
-        }
-        return false;
-    }
+//    //Retrieve the ID of the current date from the database if it's present else return 0.
+//    private int getMoodIdInDatabase(String date){
+//        String sqlString = "SELECT * from moodDB WHERE Date = '" + date + "'";
+//        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+//        while (cursor.moveToNext()){
+//            return cursor.getInt(cursor.getColumnIndex("_ID"));
+//        }
+//        return 0;
+//    }
+//
+//    //Remove the whole entry base on is ID if it's older then 7 days
+//    private ArrayList<Integer> getMoodOlderInDatabase(Date todayDate){
+//        ArrayList<Integer> moodIds = new ArrayList<Integer>();
+//        String sqlString = "SELECT * from moodDB";
+//        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+//        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+//        while (cursor.moveToNext()){
+//            try{
+//                Date dateInDatabase = sdf.parse(cursor.getString(cursor.getColumnIndex("Date")));
+//                if(dateInDatabase.getDay() < todayDate.getDay() - 7){
+//                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+//                    String deleteSql = "DELETE FROM moodDB WHERE _ID = " + moodID + "";
+//                    mDatabaseWrite.execSQL(deleteSql);
+//                }
+//
+//            }catch (Exception e){
+//                System.out.println(e.getLocalizedMessage());
+//            }
+//
+//        }
+//        return moodIds;
+//    }
+//
+//    //Check is their is a current date in the database
+//    private Boolean isToday(){
+//        String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
+//        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+//        while (cursor.moveToNext()){
+//            return true;
+//        }
+//        return false;
+//    }
 
     //Retrieve the database information
     private void getDatabaseInfo(){
