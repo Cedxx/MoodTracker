@@ -20,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -161,38 +160,29 @@ public class MainActivity extends AppCompatActivity {
         mComment.show();
     }
 
-    //Check the database if their is already a Mood set for the curreznt day. If a Mood is present
+    //Check the database if their is already a Mood set for the current day. If a Mood is present
     //Delete it from the database.
-    private int isNotOlderThanAWeek() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    private void isNotOlderThanAWeek() {
+        //SimpleDateFormat dateFormat = new SimpleDateFormat(getCurrentDate());
         //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String sqlString = "SELECT * from moodDB WHERE Date = '" + new Date() + "'";
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        //if (cursor == null || cursor.getColumnCount() == 0)
-        while (cursor.moveToNext()) {
-            try {
-                Date DateInDatabase = dateFormat.parse(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
-                Date todayDate = new Date();
-                if (todayDate.getDay() - DateInDatabase.getDay() > 7) {
-                    //delete the line in the database corresponding to the ID
-                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
-                    // Define 'where' part of query.
-                    String selection = Mood.MoodEntry._ID + " = ? ";
-                    // Specify arguments in placeholder order.
-                    String[] selectionArgs = new String[]{Integer.toString(moodID)};
-                    // Issue SQL statement.
-                    int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
+        if (cursor != null && cursor.moveToNext()){
+            String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
+            String todayDate = getCurrentDate();
+            if (todayDate == DateInDatabase) {
+                //delete the line in the database corresponding to the ID
+                int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+                // Define 'where' part of query.
+                String selection = Mood.MoodEntry._ID + " = ? ";
+                // Specify arguments in placeholder order.
+                String[] selectionArgs = new String[]{Integer.toString(moodID)};
 
-                    return cursor.getInt(deletedRows);
-                } else {
-
-                    return 0;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+                // Issue SQL statement.
+                mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
+                return;
             }
-        }
-        return 0;
+        }cursor.close();
     }
 
 
@@ -275,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Generate the current date
-    public static final String DATE_FORMAT = "dd-MMM-yyyy";
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
 
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
