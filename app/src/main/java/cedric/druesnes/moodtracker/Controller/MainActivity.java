@@ -170,19 +170,18 @@ public class MainActivity extends AppCompatActivity {
         if (cursor != null && cursor.moveToNext()){
             String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
             String todayDate = getCurrentDate();
-            if (todayDate == DateInDatabase) {
+            if (!todayDate.equals(DateInDatabase)) {
                 //delete the line in the database corresponding to the ID
                 int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
                 // Define 'where' part of query.
-                String selection = Mood.MoodEntry._ID + " = ? ";
+                String selection = Mood.MoodEntry._ID + "=?";
                 // Specify arguments in placeholder order.
-                String[] selectionArgs = new String[]{Integer.toString(moodID)};
-
+                String[] selectionArgs = {String.valueOf(moodID)};
                 // Issue SQL statement.
+                //int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
                 mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
-                return;
             }
-        }cursor.close();
+        }
     }
 
 
