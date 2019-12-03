@@ -193,6 +193,33 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseWrite.execSQL(sqlString);
     }
 
+    //Remove the whole entry base on is ID if it's older then 7 days
+    private ArrayList<Integer> getMoodOlderThan7Days (){
+        ArrayList<Integer> moodIds = new ArrayList<>();
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
+        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+        String todayDate = getCurrentDate();
+        String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(todayDate);
+        Calendar dbCalendar = Calendar.getInstance();
+        dbCalendar.setTime(DateInDatabase);
+        while (cursor.moveToNext()){
+            try{
+                if(calendar.get(Calendar.DAY_OF_MONTH) - dbCalendar.get(Calendar.DAY_OF_MONTH) > 7){
+                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+                    // Define 'where' part of query.
+                    String selection = Mood.MoodEntry._ID + " = ";
+                    mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME,selection + moodID + "", null);
+                }
+
+            }catch (Exception e){
+                System.out.println(e.getLocalizedMessage());
+            }
+
+        }
+        return moodIds;
+    }
 
     //adding manual date to database for testing
     private void addDateToDatabase () {
