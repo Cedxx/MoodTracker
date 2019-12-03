@@ -137,7 +137,12 @@ public class MainActivity extends AppCompatActivity {
                             //Calling the isNotOlderThanAWeek method to check if their is already a mood set for the day
                             //and remove the current mood to receive the new entry
                             isNotOlderThanAWeek();
-                            isMoreThenAWeek();
+                            //isMoreThenAWeek();
+                            try {
+                                getMoodOlderThan7Days();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
@@ -194,16 +199,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Remove the whole entry base on is ID if it's older then 7 days
-    private ArrayList<Integer> getMoodOlderThan7Days (){
+    private ArrayList<Integer> getMoodOlderThan7Days () throws ParseException {
         ArrayList<Integer> moodIds = new ArrayList<>();
         String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
         String todayDate = getCurrentDate();
         String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(todayDate);
+        calendar.setTime(sdf.parse(todayDate));
         Calendar dbCalendar = Calendar.getInstance();
-        dbCalendar.setTime(DateInDatabase);
+        dbCalendar.setTime(sdf.parse(DateInDatabase));
         while (cursor.moveToNext()){
             try{
                 if(calendar.get(Calendar.DAY_OF_MONTH) - dbCalendar.get(Calendar.DAY_OF_MONTH) > 7){
