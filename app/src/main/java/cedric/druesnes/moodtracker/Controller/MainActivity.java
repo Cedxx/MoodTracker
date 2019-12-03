@@ -9,9 +9,11 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,8 +22,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                             //Calling the isNotOlderThanAWeek method to check if their is already a mood set for the day
                             //and remove the current mood to receive the new entry
                             isNotOlderThanAWeek();
+                            isMoreThenAWeek();
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
@@ -163,25 +168,42 @@ public class MainActivity extends AppCompatActivity {
     //Check the database if their is already a Mood set for the current day. If a Mood is present
     //Delete it from the database.
     private void isNotOlderThanAWeek() {
-        //SimpleDateFormat dateFormat = new SimpleDateFormat(getCurrentDate());
-        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
         if (cursor != null && cursor.moveToNext()){
             String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
             String todayDate = getCurrentDate();
-            if (!todayDate.equals(DateInDatabase)) {
+            if (todayDate.equals(DateInDatabase)) {
                 //delete the line in the database corresponding to the ID
-                int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+                int moodID = cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry._ID));
                 // Define 'where' part of query.
-                String selection = Mood.MoodEntry._ID + "=?";
+                String selection = Mood.MoodEntry._ID + " = ?";
                 // Specify arguments in placeholder order.
                 String[] selectionArgs = {String.valueOf(moodID)};
                 // Issue SQL statement.
-                //int deletedRows = mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
                 mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
             }
         }
+    }
+
+    //Check the database if their is already a Mood set for the current day. If a Mood is present
+    //Delete it from the database.
+    private void isMoreThenAWeek() {
+        String sqlString = "DELETE from moodDB WHERE Date <= Date('now','-7 day')";
+        mDatabaseWrite.execSQL(sqlString);
+    }
+
+
+    //adding manual date to database for testing
+    private void addDateToDatabase () {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i <=5; i++) {
+            values.put(Mood.MoodEntry.COLUMN_DATE, i);
+            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 0);
+            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+
+        }
+
     }
 
 
