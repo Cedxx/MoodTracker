@@ -9,11 +9,9 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                             ContentValues values = new ContentValues();
                             values.put(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
                             values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
-                            values.put(Mood.MoodEntry.COLUMN_DATE, getCurrentDate());
+                            values.put(Mood.MoodEntry.COLUMN_DATE, getDateFormat());
 
                             //Insert the new row, returning the primary key value of the new row
                             long newRowId = mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
@@ -181,11 +178,11 @@ public class MainActivity extends AppCompatActivity {
     //Check the database if their is already a Mood set for the current day. If a Mood is present
     //Delete it from the database.
     private void isNotOlderThanAWeek() {
-        String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
+        String sqlString = "SELECT * from moodDB WHERE Date = '" + getDateFormat() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
         if (cursor != null && cursor.moveToNext()) {
-            String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
-            String todayDate = getCurrentDate();
+            String DateInDatabase = getDateFormat().format(cursor.getString(cursor.getColumnIndex("Date")));
+            String todayDate = getDateFormat();
             if (todayDate.equals(DateInDatabase)) {
                 //delete the line in the database corresponding to the ID
                 int moodID = cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry._ID));
@@ -199,13 +196,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Check the database if their is already a Mood set for the current day. If a Mood is present
-    //Delete it from the database.
-    private void isMoreThenAWeek() {
-        String sqlString = "DELETE from moodDB WHERE Date <= Date('now','-7 day')";
-        mDatabaseWrite.execSQL(sqlString);
-    }
-
+ 
     //Remove the whole entry base on is ID if it's older then 7 days
     private ArrayList<Integer> getMoodOlderThan7Days() {
         ArrayList<Integer> moodIds = new ArrayList<>();
@@ -213,8 +204,8 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
 
         while (cursor.moveToNext()) {
-            String todayDate = getCurrentDate();
-            String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
+            String todayDate = getDateFormat();
+            String DateInDatabase = getDateFormat().format(cursor.getString(cursor.getColumnIndex("Date")));
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
             try {
                 Calendar calendar = Calendar.getInstance();
@@ -238,18 +229,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         return moodIds;
-    }
-
-    //adding manual date to database for testing
-    private void addDateToDatabase() {
-        ContentValues values = new ContentValues();
-        for (int i = 0; i <= 5; i++) {
-            values.put(Mood.MoodEntry.COLUMN_DATE, i);
-            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 0);
-            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
-
-        }
-
     }
 
 
@@ -291,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    //Mood Image variable
+    //Mood Image variable handle with a Switch Case for all 5 different mood
     private int changeMood(int currentMood) {
         if (currentMood < 0) {
             currentMood = 0;
@@ -331,14 +310,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Generate the current date
+    //small variable to generate the date format
     public static final String DATE_FORMAT = "dd-MM-yyyy";
 
-    public static String getCurrentDate() {
+    // Variable to convert simpleDateFormat from Date to String
+    public static String getDateFormat() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = new Date();
-        return dateFormat.format(today);
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     // TODO: Add onResume() here:
