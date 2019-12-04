@@ -84,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseWrite = mDbHelper.getWritableDatabase();
         // Get the database repository in read mode
         mDatabaseRead = mDbHelper.getReadableDatabase();
+        
+        //manual import date
+//        for (int i = 0; i < 1; i++) {
+//            ContentValues values = new ContentValues();
+//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "test n°" + i);
+//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 2);
+//            values.put(Mood.MoodEntry.COLUMN_DATE, "23-11-2019");
+//
+//            //Insert the new row, returning the primary key value of the new row
+//            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+//
+//        }
 
 
         // Linking the elements in the layout to Java code
@@ -138,11 +150,7 @@ public class MainActivity extends AppCompatActivity {
                             //and remove the current mood to receive the new entry
                             isNotOlderThanAWeek();
                             //isMoreThenAWeek();
-                            try {
-                                getMoodOlderThan7Days();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            getMoodOlderThan7Days();
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
@@ -175,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     private void isNotOlderThanAWeek() {
         String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        if (cursor != null && cursor.moveToNext()){
+        if (cursor != null && cursor.moveToNext()) {
             String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
             String todayDate = getCurrentDate();
             if (todayDate.equals(DateInDatabase)) {
@@ -199,38 +207,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Remove the whole entry base on is ID if it's older then 7 days
-    private ArrayList<Integer> getMoodOlderThan7Days () throws ParseException {
+    private ArrayList<Integer> getMoodOlderThan7Days() {
         ArrayList<Integer> moodIds = new ArrayList<>();
-        String sqlString = "SELECT * from moodDB WHERE Date = '" + getCurrentDate() + "'";
+        String sqlString = "SELECT * from moodDB";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        String todayDate = getCurrentDate();
-        String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(sdf.parse(todayDate));
-        Calendar dbCalendar = Calendar.getInstance();
-        dbCalendar.setTime(sdf.parse(DateInDatabase));
-        while (cursor.moveToNext()){
-            try{
-                if(calendar.get(Calendar.DAY_OF_MONTH) - dbCalendar.get(Calendar.DAY_OF_MONTH) > 7){
-                    int moodID = cursor.getInt(cursor.getColumnIndex("_ID"));
+
+        while (cursor.moveToNext()) {
+            String todayDate = getCurrentDate();
+            String DateInDatabase = getCurrentDate().format(cursor.getString(cursor.getColumnIndex("Date")));
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            try {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(sdf.parse(todayDate));
+                Calendar dbCalendar = Calendar.getInstance();
+                dbCalendar.setTime(sdf.parse(DateInDatabase));
+                if (calendar.get(Calendar.DAY_OF_MONTH) - dbCalendar.get(Calendar.DAY_OF_MONTH) > 7) {
+                    int moodID = cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry._ID));
                     // Define 'where' part of query.
-                    String selection = Mood.MoodEntry._ID + " = ";
-                    mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME,selection + moodID + "", null);
+                    String selection = Mood.MoodEntry._ID + " = ?";
+                    // Specify arguments in placeholder order.
+                    String[] selectionArgs = {String.valueOf(moodID)};
+                    // Issue SQL statement.
+                    mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
                 }
-
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
+                break;
             }
-
         }
+
+
         return moodIds;
     }
 
     //adding manual date to database for testing
-    private void addDateToDatabase () {
+    private void addDateToDatabase() {
         ContentValues values = new ContentValues();
-        for (int i = 0; i <=5; i++) {
+        for (int i = 0; i <= 5; i++) {
             values.put(Mood.MoodEntry.COLUMN_DATE, i);
             values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 0);
             mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
