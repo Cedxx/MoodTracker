@@ -129,6 +129,9 @@ public class MainActivity extends AppCompatActivity {
         //Load and get the IDs to identify the sounds
         mASoundId = mSoundPool.load(getApplicationContext(), R.raw.note6_a, 1);
 
+        //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
+        getMoodOlderThan7Days();
+
     }
 
 
@@ -146,8 +149,6 @@ public class MainActivity extends AppCompatActivity {
                             //Calling the isNotOlderThanAWeek method to check if their is already a mood set for the day
                             //and remove the current mood to receive the new entry
                             isNotOlderThanAWeek();
-                            //isMoreThenAWeek();
-                            getMoodOlderThan7Days();
 
                             //Create a new map of values, where column names are the keys
                             ContentValues values = new ContentValues();
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
- 
+
     //Remove the whole entry base on is ID if it's older then 7 days
     private ArrayList<Integer> getMoodOlderThan7Days() {
         ArrayList<Integer> moodIds = new ArrayList<>();
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.setTime(sdf.parse(todayDate));
                 Calendar dbCalendar = Calendar.getInstance();
                 dbCalendar.setTime(sdf.parse(DateInDatabase));
-                if (calendar.get(Calendar.DAY_OF_MONTH) - dbCalendar.get(Calendar.DAY_OF_MONTH) > 7) {
+                if (dbCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH) > 7) {
                     int moodID = cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry._ID));
                     // Define 'where' part of query.
                     String selection = Mood.MoodEntry._ID + " = ?";
