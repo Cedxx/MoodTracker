@@ -2,17 +2,20 @@ package cedric.druesnes.moodtracker.view;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 
@@ -28,6 +31,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     private int width = Resources.getSystem().getDisplayMetrics().widthPixels;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Resources.getSystem().getDisplayMetrics().heightPixels / 7);
 
+
     // data is passed into the constructor
     public MyRecylerViewAdapter(Context context, ArrayList<MoodModel> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -39,6 +43,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
         return new ViewHolder(view);
+
     }
 
     // binds the data to the TextView in each row
@@ -49,6 +54,14 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
         // set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
+        holder.mImageView.setImageResource(R.drawable.ic_comment_black_48px);
+        if (!(getComment(position).equals(""))){
+            mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
+            mImageButtonRow.setVisibility(View.VISIBLE);
+        }else{
+            mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
+            mImageButtonRow.setVisibility(View.GONE);
+        }
         switch (getMoodIndex(position)){
             case 0:
                 params.width = width * 20 / 100;
@@ -71,6 +84,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.banana_yellow));
                 break;
         }
+
 
         //Switch to display the proper date schema for the week
         switch (position){
@@ -115,10 +129,12 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        ImageView mImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.recyclerComment);
+            mImageView = itemView.findViewById(R.id.imageButtonRow);
             itemView.setOnClickListener(this);
         }
 
@@ -134,13 +150,18 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         return mData.get(position).getMoodIndex();
     }
 
+    public String getComment (int position){
+        return mData.get(position).getComment();
+    }
+
     // convenience method for getting data at click position
     public String getItem(int id) {
         return mData.get(id).getComment();
     }
 
     // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
+        //Toast.makeText(getComment(), Toast.LENGTH_SHORT).show();
         this.mClickListener = itemClickListener;
     }
 
