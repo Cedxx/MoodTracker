@@ -2,6 +2,7 @@ package cedric.druesnes.moodtracker.view;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import cedric.druesnes.moodtracker.Controller.HistoryActivity;
 import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
@@ -48,16 +50,24 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         //String comment = this.getItem(position);
         //holder.myTextView.setText(comment);
 
+
         // set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
-        holder.mImageView.setImageResource(R.drawable.ic_comment_black_48px);
+
         if (!(getComment(position).equals(""))){
             mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
             mImageButtonRow.setVisibility(View.VISIBLE);
+            mImageButtonRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(),getComment(position),Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }else{
             mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
             mImageButtonRow.setVisibility(View.GONE);
@@ -113,7 +123,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     }
 
-    // total number of rows
+    // Limit the total number of rows displayed to 7
     @Override
     public int getItemCount() {
         int limit = 7;
@@ -129,12 +139,11 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
-        ImageView mImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.recyclerComment);
-            mImageView = itemView.findViewById(R.id.imageButtonRow);
+            mImageButtonRow = itemView.findViewById(R.id.imageButtonRow);
             itemView.setOnClickListener(this);
         }
 
@@ -142,7 +151,6 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
             mImageButtonRow = itemView.findViewById(R.id.imageButtonRow);
-
         }
     }
 
@@ -161,7 +169,6 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
-        //Toast.makeText(getComment(), Toast.LENGTH_SHORT).show();
         this.mClickListener = itemClickListener;
     }
 
