@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import cedric.druesnes.moodtracker.Model.Mood;
@@ -81,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseWrite = mDbHelper.getWritableDatabase();
         // Get the database repository in read mode
         mDatabaseRead = mDbHelper.getReadableDatabase();
-        
-        //manual import date
+
+        // manual import date
 //        for (int i = 0; i < 1; i++) {
 //            ContentValues values = new ContentValues();
-//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "test n°" + i);
-//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 2);
-//            values.put(Mood.MoodEntry.COLUMN_DATE, "23-11-2019");
+//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "" + i);
+//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 5);
+//            values.put(Mood.MoodEntry.COLUMN_DATE, "09-12-2019");
 //
 //            //Insert the new row, returning the primary key value of the new row
 //            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
@@ -131,9 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
         getMoodOlderThan7Days();
-
-        //
-        //addEmptyRowsToDatabase();
 
     }
 
@@ -185,7 +183,8 @@ public class MainActivity extends AppCompatActivity {
         String sqlString = "SELECT * from moodDB WHERE Date = '" + getDateFormat() + "'";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
         if (cursor != null && cursor.moveToNext()) {
-            String DateInDatabase = getDateFormat().format(cursor.getString(cursor.getColumnIndex("Date")));
+            getDateFormat();
+            String DateInDatabase = cursor.getString(cursor.getColumnIndex("Date"));
             String todayDate = getDateFormat();
             if (todayDate.equals(DateInDatabase)) {
                 //delete the line in the database corresponding to the ID
@@ -196,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] selectionArgs = {String.valueOf(moodID)};
                 // Issue SQL statement.
                 mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
-            }
+            }cursor.close();
         }
     }
 
@@ -209,8 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             String todayDate = getDateFormat();
-            String DateInDatabase = getDateFormat().format(cursor.getString(cursor.getColumnIndex("Date")));
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            getDateFormat();
+            String DateInDatabase = cursor.getString(cursor.getColumnIndex("Date"));
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.FRENCH);
             try {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(sdf.parse(todayDate));
@@ -229,37 +229,12 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(e.getLocalizedMessage());
                 break;
             }
-        }
+        }cursor.close();
 
 
         return moodIds;
     }
 
-    //Check number of rows in the database
-    public int getProfilesCount(){
-        String sqlString = "SELECT * from moodDB";
-        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
-    }
-
-    //Add empty rows in database if total number of rows present in database is less then 7 entries
-    public void addEmptyRowsToDatabase(){
-        if (getProfilesCount() < 7){
-
-            for (int i = 0; i < 7; i++) {
-                ContentValues values = new ContentValues();
-                values.putNull(Mood.MoodEntry.COLUMN_COMMENT);
-                values.putNull(Mood.MoodEntry.COLUMN_MOOD_INDEX);
-                values.putNull(Mood.MoodEntry.COLUMN_DATE);
-
-                //Insert the new row, returning the primary key value of the new row
-                mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
-
-            }
-        }
-    }
 
     //Retrieve the database information
     private void getDatabaseInfo() {
@@ -344,15 +319,12 @@ public class MainActivity extends AppCompatActivity {
 
     // Variable to convert simpleDateFormat from Date to String
     public static String getDateFormat() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.FRENCH);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    // TODO: Add onResume() here:
-
-    // TODO: Add onPause() here:
 
     //Close the database with the onDestroy method
     @Override
@@ -365,11 +337,7 @@ public class MainActivity extends AppCompatActivity {
     // onTouchEven to handle the swipe view
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mDetector.onTouchEvent(event)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !mDetector.onTouchEvent(event);
     }
 
     //Gesture Detector to handle Swipe action with onFling

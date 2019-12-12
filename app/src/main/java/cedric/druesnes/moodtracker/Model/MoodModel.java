@@ -2,10 +2,12 @@ package cedric.druesnes.moodtracker.Model;
 
 public class MoodModel {
 
+    // Member variable
     private String comment;
     private int moodIndex;
 
-    public MoodModel(){
+    //Set the Model for the Mood
+    public MoodModel() {
 
     }
 

@@ -5,6 +5,7 @@
     <color name="colorAccent">#ff00796b</color>
 
     <!-- Background colors used for the different moods -->
+    <color name="white">#ffffff</color>
     <color name="faded_red">#ffde3c50</color>
     <color name="warm_grey">#ff9b9b9b</color>
     <color name="cornflower_blue_65">#a5468ad9</color>

@@ -16,6 +16,7 @@ import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
 
+//HistoryActivity will display the history of the saved mood for the last 7 days
 public class HistoryActivity extends AppCompatActivity {
 
 
@@ -56,6 +57,7 @@ public class HistoryActivity extends AppCompatActivity {
                 sortOrder                   //The sort order
         );
 
+        //set the information from the database to the ArrayList and retrieve them
         ArrayList<MoodModel> moods = new ArrayList<>();
         while (cursor.moveToNext()) {
             MoodModel mood = new MoodModel();
@@ -64,6 +66,14 @@ public class HistoryActivity extends AppCompatActivity {
             moods.add(mood);
         }
         cursor.close();
+
+        //Fill up the rows with empty color if no mood was save during the last 7 days
+        for (int i = 0; moods.size() < 7; i++) {
+            MoodModel mood = new MoodModel();
+            mood.setComment("");
+            mood.setMoodIndex(10);
+            moods.add(0, mood);
+        }
 
 
         // Linking the elements in the layout to Java code
@@ -75,9 +85,6 @@ public class HistoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MyRecylerViewAdapter(this, moods);
         recyclerView.setAdapter(mAdapter);
-
-//        //Vertical divider for the RecyclerView when displaying history of the mood
-//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
     }
 

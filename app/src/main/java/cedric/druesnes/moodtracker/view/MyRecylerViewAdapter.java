@@ -1,8 +1,10 @@
 package cedric.druesnes.moodtracker.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,8 +23,10 @@ import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 
+//RecyclerView and Adapter for the Mood
 public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdapter.ViewHolder> {
 
+    // Member variable
     private ArrayList<MoodModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -31,7 +35,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     //Set the height and width of the row
     private int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Resources.getSystem().getDisplayMetrics().heightPixels / 7);
+    private LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Resources.getSystem().getDisplayMetrics().heightPixels / 7);
 
 
     // data is passed into the constructor
@@ -41,8 +45,9 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     }
 
     // inflates the row layout from xml when needed
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
         return new ViewHolder(view);
 
@@ -50,29 +55,32 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        //String comment = this.getItem(position);
-        //holder.myTextView.setText(comment);
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-
-         //set width of RecyclerView and the color of mood for each row
+        //set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
 
-        if (!(getComment(position).equals(""))){
+        //if comment is present retrieve the comment icon and display it on the mood row
+        if (!(getComment(position).equals(""))) {
             mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
             mImageButtonRow.setVisibility(View.VISIBLE);
             mImageButtonRow.setOnClickListener(new View.OnClickListener() {
+
+                //OnClick will display a Toast message with the current saved comment when present
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(),getComment(position),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), getComment(position), Toast.LENGTH_SHORT).show();
                 }
             });
 
-        }else{
+            //if no comment are present for the mood hide the comment icon
+        } else {
             mImageButtonRow.setImageResource(R.drawable.ic_comment_black_48px);
             mImageButtonRow.setVisibility(View.GONE);
         }
-        switch (getMoodIndex(position)){
+
+        // Switch to assign the correct color of each mood and the width associated with it
+        switch (getMoodIndex(position)) {
             case 0:
                 params.width = width * 20 / 100;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.faded_red));
@@ -93,15 +101,15 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
                 params.width = width;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.banana_yellow));
                 break;
-            case 5:
+            case 10:
                 params.width = 0 / 100;
-                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(0));
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
                 break;
         }
 
 
         //Switch to display the proper date schema for the week
-        switch (position){
+        switch (position) {
             case 0:
                 holder.myTextView.setText(R.string.one_week);
                 break;
@@ -131,10 +139,9 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
     @Override
     public int getItemCount() {
         int limit = 7;
-        if(mData.size() > limit){
+        if (mData.size() > limit) {
             return limit;
-        }
-        else {
+        } else {
             return mData.size();
         }
     }
@@ -158,11 +165,12 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         }
     }
 
-    public int getMoodIndex(int position){
+    private int getMoodIndex(int position) {
         return mData.get(position).getMoodIndex();
     }
 
-    public String getComment (int position){
+    // convenience method for getting data at click position
+    private String getComment(int position) {
         return mData.get(position).getComment();
     }
 
