@@ -132,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
         getMoodOlderThan7Days();
 
+        //
+        //addEmptyRowsToDatabase();
+
     }
 
 
@@ -232,6 +235,31 @@ public class MainActivity extends AppCompatActivity {
         return moodIds;
     }
 
+    //Check number of rows in the database
+    public int getProfilesCount(){
+        String sqlString = "SELECT * from moodDB";
+        Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
+    //Add empty rows in database if total number of rows present in database is less then 7 entries
+    public void addEmptyRowsToDatabase(){
+        if (getProfilesCount() < 7){
+
+            for (int i = 0; i < 7; i++) {
+                ContentValues values = new ContentValues();
+                values.putNull(Mood.MoodEntry.COLUMN_COMMENT);
+                values.putNull(Mood.MoodEntry.COLUMN_MOOD_INDEX);
+                values.putNull(Mood.MoodEntry.COLUMN_DATE);
+
+                //Insert the new row, returning the primary key value of the new row
+                mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+
+            }
+        }
+    }
 
     //Retrieve the database information
     private void getDatabaseInfo() {

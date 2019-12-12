@@ -55,7 +55,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
         //holder.myTextView.setText(comment);
 
 
-        // set width of RecyclerView and the color of mood for each row
+         //set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
 
         if (!(getComment(position).equals(""))){
@@ -92,6 +92,10 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
             case 4:
                 params.width = width;
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.banana_yellow));
+                break;
+            case 5:
+                params.width = 0 / 100;
+                holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(0));
                 break;
         }
 
