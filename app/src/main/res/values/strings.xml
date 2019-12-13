@@ -10,4 +10,5 @@
     <string name="three_day">il y a trois jours</string>
     <string name="last_day">Avant-hier</string>
     <string name="yesterday">Hier</string>
+    <string name="display_comment_icon">Display Comment Icon</string>
 </resources>
