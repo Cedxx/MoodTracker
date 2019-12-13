@@ -40,17 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
 
-    // Constants for the SoundPool
-    private final int NR_OF_SIMULTANEOUS_SOUNDS = 1;
-    private final float LEFT_VOLUME = 1.0f;
-    private final float RIGHT_VOLUME = 1.0f;
-    private final int NO_LOOP = 0;
-    private final int PRIORITY = 0;
-    private final float NORMAL_PLAY_RATE = 1.0f;
-
     // Member variable
     private GestureDetector mDetector;
-    private MyGestureListener mListener;
     public ImageView mMoodImage;
     public ImageButton mCommentImage;
     public ImageButton mHistoryButton;
@@ -70,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mListener = new MyGestureListener();
-        mDetector = new GestureDetector(getApplicationContext(), mListener);
+        MyGestureListener listener = new MyGestureListener();
+        mDetector = new GestureDetector(getApplicationContext(), listener);
         mMood = new MoodModel();
         mMood.setMoodIndex(mCurrentMood);
 
@@ -86,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         // manual import date
 //        for (int i = 0; i < 1; i++) {
 //            ContentValues values = new ContentValues();
-//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "" + i);
-//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 5);
-//            values.put(Mood.MoodEntry.COLUMN_DATE, "09-12-2019");
+//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "Test premier jour");
+//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 4);
+//            values.put(Mood.MoodEntry.COLUMN_DATE, "11-12-2019");
 //
 //            //Insert the new row, returning the primary key value of the new row
 //            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
@@ -125,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //create a new SoundPool when we swipe mood
+        // Constants for the SoundPool
+        int NR_OF_SIMULTANEOUS_SOUNDS = 1;
         mSoundPool = new SoundPool(NR_OF_SIMULTANEOUS_SOUNDS, AudioManager.STREAM_MUSIC, 0);
 
         //Load and get the IDs to identify the sounds
@@ -283,6 +276,11 @@ public class MainActivity extends AppCompatActivity {
         }
         mCurrentMood = currentMood;
         mMood.setMoodIndex(currentMood);
+        float LEFT_VOLUME = 1.0f;
+        float RIGHT_VOLUME = 1.0f;
+        int NO_LOOP = 0;
+        int PRIORITY = 0;
+        float NORMAL_PLAY_RATE = 1.0f;
         switch (currentMood) {
             case 0:
                 mMoodImage.setImageResource(R.drawable.smiley_sad);

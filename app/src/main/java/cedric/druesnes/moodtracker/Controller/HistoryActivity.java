@@ -63,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity {
             MoodModel mood = new MoodModel();
             mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
             mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
-            moods.add(mood);
+            moods.add(0,mood);
         }
         cursor.close();
 
