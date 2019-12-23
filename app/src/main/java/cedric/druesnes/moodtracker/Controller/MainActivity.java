@@ -74,18 +74,6 @@ public class MainActivity extends AppCompatActivity {
         // Get the database repository in read mode
         mDatabaseRead = mDbHelper.getReadableDatabase();
 
-        // manual import date
-//        for (int i = 0; i < 1; i++) {
-//            ContentValues values = new ContentValues();
-//            values.put(Mood.MoodEntry.COLUMN_COMMENT, "Test premier jour");
-//            values.put(Mood.MoodEntry.COLUMN_MOOD_INDEX, 4);
-//            values.put(Mood.MoodEntry.COLUMN_DATE, "11-12-2019");
-//
-//            //Insert the new row, returning the primary key value of the new row
-//            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
-//
-//        }
-
 
         // Linking the elements in the layout to Java code
         mMoodImage = findViewById(R.id.moodView);
