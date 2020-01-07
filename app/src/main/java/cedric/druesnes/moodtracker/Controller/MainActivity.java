@@ -216,45 +216,6 @@ public class MainActivity extends AppCompatActivity {
         return moodIds;
     }
 
-
-    //Retrieve the database information
-    private void getDatabaseInfo() {
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                BaseColumns._ID,
-                Mood.MoodEntry.COLUMN_COMMENT,
-                Mood.MoodEntry.COLUMN_MOOD_INDEX,
-                Mood.MoodEntry.COLUMN_DATE
-        };
-
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                Mood.MoodEntry.COLUMN_DATE + " DESC";
-
-        Cursor cursor = mDatabaseRead.query(
-                Mood.MoodEntry.TABLE_NAME,   //The table to query
-                projection,                  // The array of columns to return (pass null to get all)
-                null,                   // The columns for the WHERE clause
-                null,               //The values for the WHERE clause
-                null,                //Don't group the rows
-                null,                 //Don't filter by row groups
-                sortOrder                   //The sort order
-        );
-
-        //set the information from the database to the ArrayList and retrieve them
-        ArrayList<MoodModel> moods = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            MoodModel mood = new MoodModel();
-            mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
-            mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
-            moods.add(mood);
-        }
-        cursor.close();
-    }
-
     //Mood Image variable handle with a Switch Case for all 5 different mood
     private int changeMood(int currentMood) {
         if (currentMood < 0) {

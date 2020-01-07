@@ -3,28 +3,23 @@ package cedric.druesnes.moodtracker.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import cedric.druesnes.moodtracker.Controller.HistoryActivity;
-import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 
 //RecyclerView and Adapter for the Mood
-public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdapter.ViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
     // Member variable
     private ArrayList<MoodModel> mData;
@@ -39,7 +34,7 @@ public class MyRecylerViewAdapter extends RecyclerView.Adapter<MyRecylerViewAdap
 
 
     // data is passed into the constructor
-    public MyRecylerViewAdapter(Context context, ArrayList<MoodModel> data) {
+    public MyRecyclerViewAdapter(Context context, ArrayList<MoodModel> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }

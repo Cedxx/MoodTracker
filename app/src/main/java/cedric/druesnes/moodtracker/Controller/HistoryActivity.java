@@ -14,14 +14,14 @@ import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodDbHelper;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
-import cedric.druesnes.moodtracker.view.MyRecylerViewAdapter;
+import cedric.druesnes.moodtracker.view.MyRecyclerViewAdapter;
 
 //HistoryActivity will display the history of the saved mood for the last 7 days
 public class HistoryActivity extends AppCompatActivity {
 
 
     //RecyclerView variable :
-    MyRecylerViewAdapter mAdapter;
+    MyRecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity {
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MyRecylerViewAdapter(this, moods);
+        mAdapter = new MyRecyclerViewAdapter(this, moods);
         recyclerView.setAdapter(mAdapter);
 
     }
