@@ -30,7 +30,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     //Set the height and width of the row
     private int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-    private LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Resources.getSystem().getDisplayMetrics().heightPixels / 7);
+    private LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            Resources.getSystem().getDisplayMetrics().heightPixels / 7);
 
 
     // data is passed into the constructor
@@ -52,7 +53,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-        //set width of RecyclerView and the color of mood for each row
+         //set width of RecyclerView and the color of mood for each row
         holder.itemView.setLayoutParams(params);
 
         //if comment is present retrieve the comment icon and display it on the mood row
@@ -75,6 +76,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
 
         // Switch to assign the correct color of each mood and the width associated with it
+        setMoodScreenWidth(position, holder);
+
+        //Start the setDateText method that will display the text schema for the 7 days to display
+        setDateText(position, holder);
+
+    }
+
+    // Switch to assign the correct color of each mood and the width associated with it
+    private void setMoodScreenWidth (int position, ViewHolder holder){
         switch (getMoodIndex(position)) {
             case 0:
                 params.width = width * 20 / 100;
@@ -101,9 +111,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
                 break;
         }
+    }
 
-
-        //Switch to display the proper date schema for the week
+    //Switch to display the proper date schema for the week
+    private void setDateText(int position, ViewHolder holder){
         switch (position) {
             case 0:
                 holder.myTextView.setText(R.string.one_week);
@@ -127,7 +138,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 holder.myTextView.setText(R.string.yesterday);
                 break;
         }
-
     }
 
     // Limit the total number of rows displayed to 7
@@ -183,5 +193,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 
 }

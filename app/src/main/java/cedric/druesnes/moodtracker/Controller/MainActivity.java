@@ -176,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 String[] selectionArgs = {String.valueOf(moodID)};
                 // Issue SQL statement.
                 mDatabaseWrite.delete(Mood.MoodEntry.TABLE_NAME, selection, selectionArgs);
-            }cursor.close();
+            }
+            cursor.close();
         }
     }
 
@@ -210,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(e.getLocalizedMessage());
                 break;
             }
-        }cursor.close();
+        }
+        cursor.close();
 
 
         return moodIds;
