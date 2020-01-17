@@ -3,12 +3,12 @@ package cedric.druesnes.moodtracker.Controller;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabaseWrite;
     private SQLiteDatabase mDatabaseRead;
 
+    // MyPref - a static String variable like:
+    public static final String MyPref = "MyPrefsFile";
+    private SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
         mDetector = new GestureDetector(getApplicationContext(), listener);
         mMood = new MoodModel();
         mMood.setMoodIndex(mCurrentMood);
+
+        //Sharedpreferences test
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
+        editor = pref.edit();
 
         //Instantiate the database
         mDbHelper = new MoodDbHelper(getApplicationContext());
@@ -274,6 +282,28 @@ public class MainActivity extends AppCompatActivity {
         return dateFormat.format(date);
     }
 
+
+
+
+    //store data
+//    public SharedPreferences.Editor getEditor() {
+//        editor.putInt(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
+//        //editor.putString(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
+//        editor.putString(Mood.MoodEntry.COLUMN_DATE, getDateFormat());
+//
+//        //save the data
+//        editor.apply();
+//        return editor;
+//    }
+
+    //OnPause application will save the current selected mood and comment for the day
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        editor.putInt("mood", changeMood(mCurrentMood));
+        editor.apply();
+    }
 
     //Close the database with the onDestroy method
     @Override
