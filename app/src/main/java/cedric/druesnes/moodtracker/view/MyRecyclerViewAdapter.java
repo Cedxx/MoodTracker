@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import cedric.druesnes.moodtracker.Controller.MainActivity;
 import cedric.druesnes.moodtracker.Model.MoodModel;
 import cedric.druesnes.moodtracker.R;
 
@@ -118,6 +119,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         switch (position) {
             case 0:
                 holder.myTextView.setText(R.string.one_week);
+                MainActivity.getMoodOlderThan1Days();
                 break;
             case 1:
                 holder.myTextView.setText(R.string.six_day);

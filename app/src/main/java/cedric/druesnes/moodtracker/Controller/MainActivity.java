@@ -1,6 +1,9 @@
 package cedric.druesnes.moodtracker.Controller;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_MIN_DISTANCE = 60;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+    private static SQLiteDatabase mDatabaseRead;
+    private static SQLiteDatabase mDatabaseWrite;
 
     // Member variable
     private GestureDetector mDetector;
@@ -53,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
     private int mASoundId;
     private ArrayList<String> mCommentArray;
     private MoodDbHelper mDbHelper;
-    private SQLiteDatabase mDatabaseWrite;
-    private SQLiteDatabase mDatabaseRead;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+
 
     // MyPref - a static String variable like:
     public static final String MyPref = "MyPrefsFile";
     private SharedPreferences.Editor editor;
+
+    public MainActivity() {
+    }
 
 
     @Override
@@ -69,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
         mDetector = new GestureDetector(getApplicationContext(), listener);
         mMood = new MoodModel();
         mMood.setMoodIndex(mCurrentMood);
-
-        //Sharedpreferences test
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
-        editor = pref.edit();
 
         //Instantiate the database
         mDbHelper = new MoodDbHelper(getApplicationContext());
@@ -122,7 +127,25 @@ public class MainActivity extends AppCompatActivity {
         //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
         getMoodOlderThan7Days();
 
+        //Retrieve SharedPreferences data
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
+        int saveValue = pref.getInt("mood", 0);
+        changeMood(saveValue);
+
+        //Alarm Manager
+        // Set the alarm to start at 00:00.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+        // With setInexactRepeating(), you have to use one of the AlarmManager interval
+        // constants--in this case, AlarmManager.INTERVAL_DAY.
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+
     }
+
+
 
 
     //AlertDialog for the comment button
@@ -191,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Remove the whole entry base on is ID if it's older then 7 days
-    private ArrayList<Integer> getMoodOlderThan7Days() {
+    public ArrayList<Integer> getMoodOlderThan7Days() {
         ArrayList<Integer> moodIds = new ArrayList<>();
         String sqlString = "SELECT * from moodDB";
         Cursor cursor = mDatabaseRead.rawQuery(sqlString, null);
@@ -206,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.setTime(sdf.parse(todayDate));
                 Calendar dbCalendar = Calendar.getInstance();
                 dbCalendar.setTime(sdf.parse(DateInDatabase));
-                if (dbCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH) > 7) {
+                if (dbCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH) > 1) {
                     int moodID = cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry._ID));
                     // Define 'where' part of query.
                     String selection = Mood.MoodEntry._ID + " = ?";
@@ -234,6 +257,9 @@ public class MainActivity extends AppCompatActivity {
             currentMood = 4;
         }
         mCurrentMood = currentMood;
+        //Save the current selected mood in the SharedPreferences
+        editor.putInt("mood", currentMood);
+        editor.commit();
         mMood.setMoodIndex(currentMood);
         float LEFT_VOLUME = 1.0f;
         float RIGHT_VOLUME = 1.0f;
@@ -282,28 +308,6 @@ public class MainActivity extends AppCompatActivity {
         return dateFormat.format(date);
     }
 
-
-
-
-    //store data
-//    public SharedPreferences.Editor getEditor() {
-//        editor.putInt(Mood.MoodEntry.COLUMN_MOOD_INDEX, mMood.getMoodIndex());
-//        //editor.putString(Mood.MoodEntry.COLUMN_COMMENT, editText.getText().toString());
-//        editor.putString(Mood.MoodEntry.COLUMN_DATE, getDateFormat());
-//
-//        //save the data
-//        editor.apply();
-//        return editor;
-//    }
-
-    //OnPause application will save the current selected mood and comment for the day
-    @Override
-    protected void onPause() {
-
-        super.onPause();
-        editor.putInt("mood", changeMood(mCurrentMood));
-        editor.apply();
-    }
 
     //Close the database with the onDestroy method
     @Override
