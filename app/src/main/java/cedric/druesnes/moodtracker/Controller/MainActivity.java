@@ -132,7 +132,11 @@ public class MainActivity extends AppCompatActivity {
         int saveValue = pref.getInt("mood", 0);
         changeMood(saveValue);
 
-        //Alarm Manager
+
+    }
+
+    //Setup an alarm Receiver to wakeup application at midnight every day.
+    private void setAlarmMgr(){
         // Set the alarm to start at 00:00.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -142,9 +146,7 @@ public class MainActivity extends AppCompatActivity {
         // constants--in this case, AlarmManager.INTERVAL_DAY.
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent);
-
     }
-
 
 
 
@@ -175,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());
                             editText.setText("", TextView.BufferType.EDITABLE);
+                            editor.putBoolean("manual", true);
+                            editor.commit();
                             dialog.dismiss();
                         }
                     })
