@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -126,29 +127,44 @@ public class MainActivity extends AppCompatActivity {
 
         //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
         getMoodOlderThan7Days();
+        resetAtEndOfDay();
 
         //Retrieve SharedPreferences data
         SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
         int saveValue = pref.getInt("mood", 0);
         changeMood(saveValue);
 
+        //Set default SharedPreferences to False when the user did not typed in a comment
+        editor.putBoolean("manual", false);
+        editor.commit();
+
 
     }
 
     //Setup an alarm Receiver to wakeup application at midnight every day.
-    private void setAlarmMgr(){
-        // Set the alarm to start at 00:00.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
+    private boolean setAlarmMgr(Context context){
+        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() +
+                        60 * 1000, alarmIntent);
+
     }
 
+    //Setup an alarm Receiver to wakeup application at midnight every day.
+    private void resetAtEndOfDay(){
 
+     SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
+        boolean manual = pref.getBoolean("manual", false);
+        if (setAlarmMgr(manual)==false) {
+            editor.putInt("mood", mCurrentMood);
+        }else
+            editor.putInt("mood", 0);
+            editor.putBoolean("manual", false);
+
+    }
 
     //AlertDialog for the comment button
     public void showComment() {
