@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Calling the getMoodOlderThan7Days method to check if their are entry older then 7 days in the DB and remove them.
         getMoodOlderThan7Days();
-        resetAtEndOfDay();
 
         //Retrieve SharedPreferences data
         SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
@@ -141,28 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Setup an alarm Receiver to wakeup application at midnight every day.
-    private boolean setAlarmMgr(Context context){
+    //Setup an alarm Receiver to wakeup application at 00:01 every day.
+    private void setAlarmMgr(Context context){
         alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() +
-                        60 * 1000, alarmIntent);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE,1);
+        calendar.set(Calendar.SECOND,0);
 
-    }
-
-    //Setup an alarm Receiver to wakeup application at midnight every day.
-    private void resetAtEndOfDay(){
-
-     SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
-        boolean manual = pref.getBoolean("manual", false);
-        if (setAlarmMgr(manual)==false) {
-            editor.putInt("mood", mCurrentMood);
-        }else
-            editor.putInt("mood", 0);
-            editor.putBoolean("manual", false);
+        alarmMgr.setRepeating(AlarmManager.RTC,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
     }
 
