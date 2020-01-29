@@ -52,5 +52,6 @@ class AlarmReceiver extends BroadcastReceiver {
         }
         editor.putInt("mood", 0);
         editor.putBoolean("manual", false);
+        editor.commit();
     }
 }

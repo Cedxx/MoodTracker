@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -59,13 +58,12 @@ public class MainActivity extends AppCompatActivity {
     private int mASoundId;
     private ArrayList<String> mCommentArray;
     private MoodDbHelper mDbHelper;
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
 
 
-    // MyPref - a static String variable like:
+    // SharedPreferences variable
     public static final String MyPref = "MyPrefsFile";
-    private SharedPreferences.Editor editor;
+    protected SharedPreferences.Editor mEditor;
+    protected SharedPreferences mSharedPreferences;
 
     public MainActivity() {
     }
@@ -129,22 +127,20 @@ public class MainActivity extends AppCompatActivity {
         getMoodOlderThan7Days();
 
         //Retrieve SharedPreferences data
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(MyPref, MODE_PRIVATE);
-        int saveValue = pref.getInt("mood", 0);
+        mSharedPreferences = getSharedPreferences(MyPref, MODE_PRIVATE);
+        int saveValue = mSharedPreferences.getInt("mood", 0);
         changeMood(saveValue);
 
+
         //Set default SharedPreferences to False when the user did not typed in a comment
-        editor.putBoolean("manual", false);
-        editor.commit();
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean("manual", false);
+        mEditor.commit();
 
 
-    }
-
-    //Setup an alarm Receiver to wakeup application at 00:01 every day.
-    private void setAlarmMgr(Context context){
-        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        AlarmManager alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -154,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         alarmMgr.setRepeating(AlarmManager.RTC,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
     }
+
 
     //AlertDialog for the comment button
     public void showComment() {
@@ -182,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
                             //send the comment to the historyActivity
                             mCommentArray.add(editText.getText().toString());
                             editText.setText("", TextView.BufferType.EDITABLE);
-                            editor.putBoolean("manual", true);
-                            editor.commit();
+                            mEditor.putBoolean("manual", true);
+                            mEditor.commit();
                             dialog.dismiss();
                         }
                     })
@@ -267,8 +264,9 @@ public class MainActivity extends AppCompatActivity {
         }
         mCurrentMood = currentMood;
         //Save the current selected mood in the SharedPreferences
-        editor.putInt("mood", currentMood);
-        editor.commit();
+        mEditor = mSharedPreferences.edit();
+        mEditor.putInt("mood", currentMood);
+        mEditor.commit();
         mMood.setMoodIndex(currentMood);
         float LEFT_VOLUME = 1.0f;
         float RIGHT_VOLUME = 1.0f;
