@@ -17,9 +17,6 @@ import cedric.druesnes.moodtracker.Model.MoodDbHelper;
 
 class AlarmReceiver extends BroadcastReceiver {
 
-    private MoodDbHelper mDbHelper;
-    private static SQLiteDatabase mDatabaseWrite;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,10 +31,10 @@ class AlarmReceiver extends BroadcastReceiver {
         //set in the database the mood the user last selected
         if (!manualEntry){
             //Instantiate the database
-            mDbHelper = new MoodDbHelper(context);
+            MoodDbHelper dbHelper = new MoodDbHelper(context);
 
             // Get the database repository in write mode
-            mDatabaseWrite = mDbHelper.getWritableDatabase();
+            SQLiteDatabase databaseWrite = dbHelper.getWritableDatabase();
 
             //Create the simple date format that will be used for the date
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH);
@@ -51,7 +48,7 @@ class AlarmReceiver extends BroadcastReceiver {
             values.put(Mood.MoodEntry.COLUMN_DATE, dateFormat.format(date));
 
             //Insert the new row, returning the primary key value of the new row
-            mDatabaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
+            databaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
         }
         editor.putInt("mood", 0);
         editor.putBoolean("manual", false);
