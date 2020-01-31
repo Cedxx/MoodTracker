@@ -129,11 +129,10 @@ public class MainActivity extends AppCompatActivity {
         //Retrieve SharedPreferences data
         mSharedPreferences = getSharedPreferences(MyPref, MODE_PRIVATE);
         int saveValue = mSharedPreferences.getInt("mood", 0);
+        mEditor = mSharedPreferences.edit();
         changeMood(saveValue);
 
-
         //Set default SharedPreferences to False when the user did not typed in a comment
-        mEditor = mSharedPreferences.edit();
         mEditor.putBoolean("manual", false);
         mEditor.commit();
 
@@ -142,12 +141,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE,1);
-        calendar.set(Calendar.SECOND,0);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.HOUR_OF_DAY, 18);
+//        calendar.set(Calendar.MINUTE,21);
+//        calendar.set(Calendar.SECOND,0);
 
-        alarmMgr.setRepeating(AlarmManager.RTC,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(), 1000, alarmIntent);
 
     }
 
@@ -264,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
         }
         mCurrentMood = currentMood;
         //Save the current selected mood in the SharedPreferences
-        mEditor = mSharedPreferences.edit();
         mEditor.putInt("mood", currentMood);
         mEditor.commit();
         mMood.setMoodIndex(currentMood);

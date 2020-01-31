@@ -16,13 +16,11 @@ import java.util.TimeZone;
 import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodDbHelper;
 
-class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends BroadcastReceiver {
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Implement a BroadcastReceiver to receive the broadcast and wakeup the device if the application was killed
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 
             //Test message
             Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
@@ -60,5 +58,4 @@ class AlarmReceiver extends BroadcastReceiver {
             editor.putBoolean("manual", false);
             editor.commit();
         }
-    }
 }
