@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Retrieve SharedPreferences data
         mSharedPreferences = getSharedPreferences(MyPref, MODE_PRIVATE);
-        int saveValue = mSharedPreferences.getInt("mood", 0);
+        int saveValue = mSharedPreferences.getInt("mood", 3);
         mEditor = mSharedPreferences.edit();
         changeMood(saveValue);
 
@@ -141,12 +141,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(Calendar.HOUR_OF_DAY, 18);
-//        calendar.set(Calendar.MINUTE,21);
-//        calendar.set(Calendar.SECOND,0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE,59);
+        calendar.set(Calendar.SECOND,0);
 
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(), 1000, alarmIntent);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
     }
 

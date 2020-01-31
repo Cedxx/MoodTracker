@@ -25,7 +25,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             //Test message
             Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
             //Retrieve SharedPreferences
-            SharedPreferences pref = context.getSharedPreferences("MyprefsFile", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
 
             //Retrieve SharedPreferences data for the mood and manual entry
