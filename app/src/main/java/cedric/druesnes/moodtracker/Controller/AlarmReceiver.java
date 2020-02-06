@@ -54,7 +54,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Insert the new row, returning the primary key value of the new row
                 databaseWrite.insert(Mood.MoodEntry.TABLE_NAME, null, values);
             }
-            editor.putInt("mood", 0);
+            //Reset back the interface to the default mood
+            editor.putInt("mood", 3);
             editor.putBoolean("manual", false);
             editor.commit();
         }
