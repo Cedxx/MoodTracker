@@ -175,6 +175,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mData.get(position).getMoodIndex();
     }
 
+    private String getDate (int position){
+        return mData.get(position).getDate();
+    }
+
     // convenience method for getting data at click position
     private String getComment(int position) {
         return mData.get(position).getComment();

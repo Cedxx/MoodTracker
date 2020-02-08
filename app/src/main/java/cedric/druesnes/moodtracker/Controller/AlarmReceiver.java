@@ -22,8 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-            //Test message
-            Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
+
             //Retrieve SharedPreferences
             SharedPreferences pref = context.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();

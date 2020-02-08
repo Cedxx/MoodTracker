@@ -8,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import cedric.druesnes.moodtracker.Model.Mood;
 import cedric.druesnes.moodtracker.Model.MoodDbHelper;
@@ -63,15 +67,22 @@ public class HistoryActivity extends AppCompatActivity {
             MoodModel mood = new MoodModel();
             mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
             mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
+            mood.setDate(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
             moods.add(0,mood);
         }
         cursor.close();
+
+        //Create the simple date format that will be used for the date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = new Date();
 
         //Fill up the rows with empty color if no mood was save during the last 7 days
         for (int i = 0; moods.size() < 7; i++) {
             MoodModel mood = new MoodModel();
             mood.setComment("");
             mood.setMoodIndex(10);
+            mood.setDate(dateFormat.format(date));
             moods.add(0, mood);
         }
 
