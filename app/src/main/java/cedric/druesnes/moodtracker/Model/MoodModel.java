@@ -1,11 +1,13 @@
 package cedric.druesnes.moodtracker.Model;
 
+import java.util.Date;
+
 public class MoodModel {
 
     // Member variable
     private String comment;
     private int moodIndex;
-    private String date;
+    private Date date;
 
     //Set the Model for the Mood
     public MoodModel() {
@@ -20,7 +22,7 @@ public class MoodModel {
         this.moodIndex = moodIndex;
     }
 
-    public void setDate (String date){
+    public void setDate (Date date){
         this.date = date;
     }
 
@@ -32,7 +34,7 @@ public class MoodModel {
         return moodIndex;
     }
 
-    public String getDate(){
+    public Date getDate(){
         return date;
     }
 }

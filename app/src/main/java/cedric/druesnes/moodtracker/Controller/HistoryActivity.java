@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,8 +68,23 @@ public class HistoryActivity extends AppCompatActivity {
             MoodModel mood = new MoodModel();
             mood.setComment(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_COMMENT)));
             mood.setMoodIndex(cursor.getInt(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_MOOD_INDEX)));
-            mood.setDate(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE)));
-            moods.add(0,mood);
+
+            //Create the simple date format that will be used for the date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH);
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            try{
+                mood.setDate(dateFormat.parse(cursor.getString(cursor.getColumnIndex(Mood.MoodEntry.COLUMN_DATE))));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if(!dateFormat.format(mood.getDate()).equals(dateFormat.format(new Date()))){
+
+                moods.add(0,mood);
+            }
+
+
         }
         cursor.close();
 
@@ -82,7 +98,6 @@ public class HistoryActivity extends AppCompatActivity {
             MoodModel mood = new MoodModel();
             mood.setComment("");
             mood.setMoodIndex(10);
-            mood.setDate(dateFormat.format(date));
             moods.add(0, mood);
         }
 
